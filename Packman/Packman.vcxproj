@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Board.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="Location.cpp" />
