@@ -1,5 +1,5 @@
 #include "Board.h"
-
+// remark
 Board::Board(int _score = 0) :score(0) {}
 
 char Board::getEmptyspot()
