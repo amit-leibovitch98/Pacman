@@ -1,5 +1,8 @@
 #include "Pacman.h"
 
+//test
+
+
 Pacman::Pacman(Location _location, int _lives = 3, char _character = '@') :location(_location), lives(_lives), character(_character) {}
 
 void Pacman::initPacmanLocation()
