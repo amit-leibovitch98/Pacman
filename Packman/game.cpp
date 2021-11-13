@@ -10,6 +10,11 @@ Pacman Game::getPacman()
 	return pacman;
 }
 
+void Game::setPacman(Pacman _pacman)
+{
+	pacman = _pacman;
+}
+
 void Game::setInProgress(bool _inProgress)
 {
 	inProgress = _inProgress;
@@ -32,26 +37,29 @@ int Game::getLeftBreadcramps()
 
 void Game::run() 
 {
-	char ch;
+	int input;
 	cout << "Please enter the following option: " << endl;
 	cout << "(1) Start a new game" << endl;
 	cout << "(8) Present instructions and keys" << endl;
 	cout << "(9) EXIT" << endl;
 
-	cin >> ch;
+	cin >> input;
 
-	if (ch == 1) {
+	if (input == 1)
+	{
 		start();
 	}
-	else if (ch == 8) {
-		printInstruction();
+	else if (input == 8) 
+	{
+		//printInstruction();
 	}
 
 }
 
 void Game::start() 
 {
-	board.printBoard(getPacman());
+	
+	board.printBoard(pacman, ghosts, GHOSTS_COUNT);
 	cout << "Press any move to start" << endl;
 
 	//the condition for continuing the game
@@ -61,28 +69,37 @@ void Game::start()
 	}
 
 }
-void Game::move() 
+
+void Game::move()
 {
 	bool ghostPace = true;
-	char currStep = step(_getch());
-	while (getInProgress() && (!_kbhit() || !currStep))
+	char currStep = _getch();
+
+	while (getInProgress())
 	{
+		diraction _diraction = caster(currStep);
+
+		while (!_kbhit() || currStep != ESC)
+		{
+			for(int i = 0; i < GHOSTS_COUNT; i++)
+			{
+				ghosts[i].ghostMoveDecider();
+				board.moveGhost(GHOSTS_COUNT, ghosts);
+			}
+
+			caseCollisionGhosts();
+
+			pacman.getLocation().move(_diraction);
+			board.movePacman(pacman, _diraction);
+
+			ghostPace = !ghostPace;
+			checkGameStatus();
+		}
 		if (currStep == ESC)
 		{
 			cout << "Game Paused. Press ESC again to continue" << endl;
-			currStep = step(_getch()); // expected esc again
+			currStep = caster(_getch()); // expected esc again
 		}
-		if (ghostPace)
-		{
-			ghosts[0].ghostMoveDecider();
-			ghosts[1].ghostMoveDecider();
-			caseCollisionGhosts();
-			//printboard
-		}
-
-		currStep = step(_getch());
-		ghostPace = !ghostPace;
-		checkGameStatus();
 	}
 }
 
@@ -103,33 +120,35 @@ bool Game::checkGameStatus()
 	return inProgress;
 }
 
-char Game::step(char ch)
+diraction Game::caster(char ch)
 {
-	char ans = 0;
+	diraction ans = ERR;
+
 	if (ch == 'a' || ch == 'A') //left
 	{
-		ans = 'a';
+		ans = LEFT;
 	}
 	else if (ch == 'd' || ch == 'D') //right
 	{
-		ans = 'd';
+		ans = RIGHT;
 	}
 	else if (ch == 'w' || ch == 'W') //up
 	{
-		ans = 'w';
+		ans = UP;
 	}
 	else if (ch == 'x' || ch == 'X') //down
 	{
-		ans = 'x';
+		ans = DOWN;
 	}
 	else if (ch == 's' || ch == 'S') //stay
 	{
-		ans = 's';
+		ans = STAY;
 	}
 	else if (ch == 27) //ESC
 	{
-		ans = 27;
+		ans = ESC;
 	}
+
 	return ans;
 }
 
@@ -166,15 +185,4 @@ void Game::caseCollisionPacman()
 	}
 
 	//case wall
-}
-
-void Game:: gotoxy(int x, int y)
-{
-	HANDLE hConsoleOutput;
-	COORD dwCursorPosition;
-	cout.flush();
-	dwCursorPosition.X = x;
-	dwCursorPosition.Y = y;
-	hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleCursorPosition(hConsoleOutput,dwCursorPosition);
 }

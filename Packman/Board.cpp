@@ -1,5 +1,6 @@
 #include "Board.h"
 
+
 char Board::getEmptyspot()
 {
 	return empty_spot;
@@ -30,16 +31,19 @@ void Board::setScore(int _score)
 	score = _score;
 }
 
-void Board::printBoard(Pacman pacman)
+void Board::printBoard(Pacman pacman, Ghost ghosts[], const int ghosts_count)
 {
-	for (int i = 0; i < BOARD_WIDTH; i++)
+	cout.flush();
+	system("cls");
+
+	for (int i = 0; i < BOARD_HIGHT ; i++)
 	{
-		for (int j = 0; j < BOARD_HIGHT; j++)
-		{
-			cout << board[i][j];
-		}
-		cout << endl;
+		cout << board[i]<<endl;
 	}
+	gotoxy(pacman.getLocation());
+	cout << pacman.getCharacter();
+	for (int i = 0; i < ghosts_count; i++)
+		gotoxy(ghosts[i].getLocation());
 	cout << "Lives: " << pacman.getLives() << " | Score: " << getScore() << endl;
 }
 
@@ -49,22 +53,19 @@ void Board::moveGhost(int ghost_count, Ghost ghosts[])
 
 	for (int i = 0; i < ghost_count; i++)
 	{
-		int x = ghostsLastPos[i].getX();
-		int y = ghostsLastPos[i].getY();
-
-		Game::gotoxy(x, y);
+		gotoxy(ghostsLastPos[i]);
 
 		if (ghosts[i].getRunOverBreadcramp()) //reprint last location
 			cout << getBreadcrampCharacter();
 		else
 			cout << getEmptyspot();
 		
-		x = ghosts[i].getLocation().getX();
-		y = ghosts[i].getLocation().getY();
+		int y = ghosts[i].getLocation().getY();
+		int x = ghosts[i].getLocation().getX();
 
 		ghosts[i].setRunOverBreadcramp(board[x][y] == getBreadcrampCharacter()); //if the ghost is supposed to run over a breadcramp, ghage the falg to true, alse to false
 		
-		Game::gotoxy(x, y); //print current location
+		gotoxy(ghosts[i].getLocation()); //print current location
 		cout << ghosts[i].getCharacter();
 	}
 
@@ -76,11 +77,19 @@ void Board::moveGhost(int ghost_count, Ghost ghosts[])
 	
 }
 
-//void Board::movePacman(Pacman pacman, Location lastPos, Location newPos)
-//{
-//	board[lastPos.getX()][newPos.getY()] = ' ';
-//	board[lastPos.getX()][newPos.getY()] = pacman.getCharacter();
-//}
+void Board::movePacman(Pacman pacman, diraction _diraction)
+{
+	static Location last_location = pacman.getLocation();
+	
+	gotoxy(last_location);
+	cout << getEmptyspot();
+
+	gotoxy(pacman.getLocation());
+	if (board[pacman.getLocation().getX()][pacman.getLocation().getY()] == getBreadcrampCharacter())
+		score++;
+
+	cout << pacman.getCharacter();
+}
 
 int Board::countBreadcramps()
 {
@@ -94,4 +103,15 @@ int Board::countBreadcramps()
 		}
 	}
 	return count;
+}
+
+void Board::gotoxy(Location location)
+{
+	HANDLE hConsoleOutput;
+	COORD dwCursorPosition;
+	cout.flush();
+	dwCursorPosition.X = location.getX();
+	dwCursorPosition.Y = location.getY();
+	hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleCursorPosition(hConsoleOutput, dwCursorPosition);
 }

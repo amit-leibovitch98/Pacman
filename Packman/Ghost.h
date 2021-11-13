@@ -14,7 +14,7 @@ private:
 	const char character;
 
 public:
-	Ghost (Location _location, char charcter = '$', bool _run_over_breadcramp = true);
+	Ghost(Location _location, diraction _currDiraction, bool _run_over_breadcramp = true) :location(_location), currDiraction(_currDiraction), character('$'), run_over_breadcramp(_run_over_breadcramp) {};
 	Ghost (const Ghost& other);
 	Ghost& operator=(const Ghost& other);
 	void setLocation(Location _location);

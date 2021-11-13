@@ -19,5 +19,6 @@ public:
 	char getCharacter();
 	void liveDedaction();
 	void initPacmanLocation();
+	void move(diraction _diraction);
 
 };

@@ -1,5 +1,6 @@
 #include "Location.h"
 
+
 Location::Location(const Location& other) 
 {
 	x = other.x;
@@ -47,21 +48,21 @@ bool Location::isEqual(Location other)
 }
 
 
-void Location::move(char diraction)
+void Location::move(diraction _diraction)
 {
-	if (diraction == RIGHT)
+	if (_diraction == RIGHT)
 	{
 		moveRight();
 	}
-	else if (diraction == LEFT)
+	else if (_diraction == LEFT)
 	{
 		moveLeft();
 	}
-	else if (diraction == UP)
+	else if (_diraction == UP)
 	{
 		moveUp();
 	}
-	else if (diraction == DOWN)
+	else if (_diraction == DOWN)
 	{
 		moveDown();
 	}

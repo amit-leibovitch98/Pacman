@@ -49,3 +49,25 @@ void Pacman::liveDedaction()
 {
 	setLives(getLives() - 1);
 }
+
+void Pacman::move(diraction _diraction)
+{
+
+	if (_diraction == LEFT)
+	{
+		location.moveLeft();
+	}
+	else if (_diraction == RIGHT)
+	{
+		location.moveRight();
+
+	}
+	else if (_diraction == UP)
+	{
+		location.moveUp();
+	}
+	else
+	{
+		location.moveDown();
+	}
+}

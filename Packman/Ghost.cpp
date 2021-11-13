@@ -4,6 +4,7 @@ Ghost::Ghost(const Ghost& other) :character('@'), run_over_breadcramp(true)
 {
 	location = other.location;
 	currDiraction = other.currDiraction;
+	run_over_breadcramp = other.run_over_breadcramp;
 }
 
 Ghost& Ghost::operator=(const Ghost& other)

@@ -4,11 +4,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h> 
-#include "Pacman.h"
 #include <conio.h>
 #include <windows.h>
 #include "Board.h"
-#include "Ghost.h"
+
 
 using namespace std;
 
@@ -25,6 +24,7 @@ public:
 
 	Game() : pacman(), ghosts{ {(0,10),UP},{(39,7),DOWN} }, board(), inProgress(true), left_breadcramps(1048) {};
 	Pacman getPacman();
+	void setPacman(Pacman _pacman);
 	int getGhostCount();
 	void setInProgress(bool _inProgress);
 	bool getInProgress();
@@ -32,12 +32,11 @@ public:
 	int getLeftBreadcramps();
 	void run();
 	void start();
-	void printInstruction();
-	void exit();
+	//void printInstruction();
+	//void exit();
 	void move();
 	void caseCollisionGhosts();
-	char step(char ch);
+	diraction caster(char ch);
 	bool checkGameStatus();
 	void caseCollisionPacman();
-	static void gotoxy(int x, int y);
 };

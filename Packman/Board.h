@@ -2,8 +2,7 @@
 
 #include "Pacman.h"
 #include "Ghost.h"
-#include "Game.h"
-#include "Location.h"
+
 
 class Board
 {
@@ -49,8 +48,10 @@ public:
 	char getWallCharacter();
 	char getMagicTunnelCharacter();
 	void setScore(int _score);
-	void printBoard(Pacman pacman);
+	void printBoard(Pacman pacman, Ghost ghosts[], const int ghosts_count);
 	void moveGhost(int ghost_count, Ghost ghosts[]);
-	//void movePacman(Pacman pacman);
+	void movePacman(Pacman pacman, diraction _diraction);
 	int countBreadcramps();
+	void gotoxy(Location location);
+
 };
