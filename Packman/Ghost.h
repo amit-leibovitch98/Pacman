@@ -1,6 +1,8 @@
 #pragma once
+#include <time.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include "Location.h"
-#include "Game.h"
 
 class Ghost
 {
@@ -8,13 +10,20 @@ private:
 
 	Location location;
 	diraction currDiraction;
+	bool run_over_breadcramp;
+	const char character;
 
 public:
-
+	Ghost (Location _location, char charcter = '$', bool _run_over_breadcramp = true);
+	Ghost (const Ghost& other);
+	Ghost& operator=(const Ghost& other);
 	void setLocation(Location _location);
-	Location getLocation();
+	Location getLocation();	
+	char getCharacter();
+	bool getRunOverBreadcramp();
+	void setRunOverBreadcramp(bool _run_over_breadcramp);
 	void setCurrDiraction(diraction _currDiraction);
 	diraction getCurrDiraction();
-	void ghostMove();
+	void ghostMoveDecider();
 
 };

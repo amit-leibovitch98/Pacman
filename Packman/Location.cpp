@@ -1,6 +1,19 @@
 #include "Location.h"
 
-Location::Location(int _x=0, int _y=0) : x(_x), y(_y) {}
+Location::Location(const Location& other) 
+{
+	x = other.x;
+	y = other.y;
+}
+
+Location& Location::operator=(const Location& other) 
+{
+	if (this != &other) {
+		x = other.x;
+		y = other.y;
+	}
+	return *this;
+}
 
 void Location::setX(int _x)
 {
@@ -21,6 +34,18 @@ int Location::getY()
 {
 	return y;
 }
+
+bool Location::isEqual(Location other) 
+{
+	bool ans = false;
+	if (x == other.getX()) {
+		if (y == other.x) {
+			ans = true;
+		}
+	}
+	return ans;
+}
+
 
 void Location::move(char diraction)
 {
@@ -66,3 +91,8 @@ void Location::moveDown()
 	//else
 }
 
+void Location::pauseGame() 
+{
+	cout << "Game paused, press ESC again to continue" << endl;
+	while (!_kbhit() || _getch() != 27) {}
+}

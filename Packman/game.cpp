@@ -1,14 +1,13 @@
 #include "Game.h"
 
-Game::Game()
+int Game::getGhostCount()
 {
-	Pacman _pacman(40, 11);
-	pacman = _pacman;
-	Ghost ghost1, ghost2;
-	ghosts = new Ghost[2];
-	ghosts[0] = ghost1;
-	ghosts[1] = ghost2;
-	inProgress = true;
+	return GHOSTS_COUNT;
+}
+
+Pacman Game::getPacman()
+{
+	return pacman;
 }
 
 void Game::setInProgress(bool _inProgress)
@@ -19,6 +18,16 @@ void Game::setInProgress(bool _inProgress)
 bool Game::getInProgress()
 {
 	return inProgress;
+}
+
+void Game:: setLeftBreadcramps(int _left_breadcramps)
+{
+	left_breadcramps = _left_breadcramps;
+}
+
+int Game::getLeftBreadcramps()
+{
+	return left_breadcramps;
 }
 
 void Game::run() 
@@ -40,38 +49,38 @@ void Game::run()
 
 }
 
-void Game::start() {
-	board.print();//later
+void Game::start() 
+{
+	board.printBoard(getPacman());
 	cout << "Press any move to start" << endl;
 
 	//the condition for continuing the game
 	while (inProgress)
 	{
-		pacmanMove();
+		move();
 	}
 
 }
-
-void Game::pacmanMove() 
+void Game::move() 
 {
 	bool ghostPace = true;
-	char currStep = step(getch());
-	while (getInProgress() && ( !_kbhit() || !currStep))
+	char currStep = step(_getch());
+	while (getInProgress() && (!_kbhit() || !currStep))
 	{
 		if (currStep == ESC)
 		{
 			cout << "Game Paused. Press ESC again to continue" << endl;
-			currStep = step(getch()); // expected esc again
+			currStep = step(_getch()); // expected esc again
 		}
 		if (ghostPace)
 		{
-			ghosts[0].ghostMove();
-			ghosts[1].ghostMove();
+			ghosts[0].ghostMoveDecider();
+			ghosts[1].ghostMoveDecider();
 			caseCollisionGhosts();
 			//printboard
 		}
-		
-		currStep = step(getch());
+
+		currStep = step(_getch());
 		ghostPace = !ghostPace;
 		checkGameStatus();
 	}
@@ -80,16 +89,18 @@ void Game::pacmanMove()
 bool Game::checkGameStatus()
 {
 
-	if (pacman.getLive() == 0)
+	if (pacman.getLives() == 0)
 	{
 		cout << "You Win :)" << endl;
-		setInProgress(false);
+		inProgress = false;
 	}
-	else if (board.getNumberOfBread() == 0)
+	else if (board.countBreadcramps() == 0)
 	{
 		cout << "You Lose :(" << endl;
-		setInProgress(false);
+		inProgress = false;
+
 	}
+	return inProgress;
 }
 
 char Game::step(char ch)
@@ -124,7 +135,7 @@ char Game::step(char ch)
 
 void Game::caseCollisionGhosts()
 {
-	if (ghosts[0].getLocation() == ghosts[1].getLocation())
+	if (ghosts[0].getLocation().isEqual(ghosts[1].getLocation()))
 	{
 		if (ghosts[0].getCurrDiraction() == RIGHT)
 		{
@@ -148,7 +159,7 @@ void Game::caseCollisionGhosts()
 void Game::caseCollisionPacman()
 {
 	//case ghost
-	if (pacman.getLocation() == ghosts[0].getLocation() || pacman.getLocation() == ghosts[1].getLocation())
+	if (pacman.getLocation().isEqual(ghosts[0].getLocation()) || pacman.getLocation().isEqual(ghosts[1].getLocation()))
 	{
 		pacman.liveDedaction();
 		pacman.initPacmanLocation();
@@ -157,4 +168,13 @@ void Game::caseCollisionPacman()
 	//case wall
 }
 
-
+void Game:: gotoxy(int x, int y)
+{
+	HANDLE hConsoleOutput;
+	COORD dwCursorPosition;
+	cout.flush();
+	dwCursorPosition.X = x;
+	dwCursorPosition.Y = y;
+	hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleCursorPosition(hConsoleOutput,dwCursorPosition);
+}

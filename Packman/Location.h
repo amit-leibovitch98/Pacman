@@ -1,9 +1,12 @@
 #pragma once
-#include "Game.h"
+
+#include <iostream>
+#include <conio.h>
+#include <windows.h>
 
 using namespace std;
 
- enum diraction {RIGHT = 'a', LEFT = 'd', UP = 'w', DOWN = 'x', ESC = 27, STAY = 's' };
+enum diraction {RIGHT = 'a', LEFT = 'd', UP = 'w', DOWN = 'x', ESC = 27, STAY = 's' };
 
 class Location
 {
@@ -11,7 +14,10 @@ class Location
 	int y;
 
 public:
-	Location(int _x=0, int _y=0);
+
+	Location(int _x = 0, int _y = 0) : x(_x), y(_y) {};
+	Location(const Location& other);
+	Location& operator=(const Location& other);
 	void setX(int _x);
 	void setY(int _y);
 	int getX();
@@ -21,4 +27,6 @@ public:
 	void moveLeft();
 	void moveUp();
 	void moveDown();
+	bool isEqual(Location other);
+	void pauseGame();
 };

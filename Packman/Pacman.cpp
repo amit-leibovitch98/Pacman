@@ -1,9 +1,19 @@
 #include "Pacman.h"
 
-//test
+Pacman::Pacman(const Pacman& other) :character('@')
+{
+	location = other.location;
+	lives = other.lives;
+}
 
-
-Pacman::Pacman(Location _location, int _lives = 3, char _character = '@') :location(_location), lives(_lives), character(_character) {}
+Pacman& Pacman::operator=(const Pacman& other) 
+{
+	if (this != &other) {
+		location = other.location;
+		lives = other.lives;
+	}
+	return *this;
+}
 
 void Pacman::initPacmanLocation()
 {
