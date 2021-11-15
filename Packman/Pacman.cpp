@@ -6,7 +6,7 @@ Pacman::Pacman(const Pacman& other) :character('@')
 	lives = other.lives;
 }
 
-Pacman& Pacman::operator=(const Pacman& other) 
+Pacman& Pacman::operator=(const Pacman& other)
 {
 	if (this != &other) {
 		location = other.location;
@@ -25,7 +25,7 @@ void Pacman::setLocation(Location _location)
 	location = _location;
 }
 
-Location Pacman::getLocation()
+Location& Pacman::getLocation()
 {
 	return location;
 }

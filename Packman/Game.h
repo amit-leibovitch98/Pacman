@@ -22,7 +22,7 @@ class Game
 
 public:
 
-	Game() : pacman(), ghosts{ {(0,10),UP},{(39,7),DOWN} }, board(), inProgress(true), left_breadcramps(1048) {};
+	Game() : pacman(), ghosts{ {{10,1},UP},{{7,39},DOWN} }, board(), inProgress(true), left_breadcramps(1048) {};
 	Pacman getPacman();
 	void setPacman(Pacman _pacman);
 	int getGhostCount();
@@ -37,6 +37,6 @@ public:
 	void move();
 	void caseCollisionGhosts();
 	diraction caster(char ch);
-	bool checkGameStatus();
+	void checkGameStatus();
 	void caseCollisionPacman();
 };
