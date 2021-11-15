@@ -31,6 +31,16 @@ void Board::setScore(int _score)
 	score = _score;
 }
 
+void Board::setLeftBreadcramps(int _left_breadcramps)
+{
+	left_breadcramps = _left_breadcramps;
+}
+
+int Board::getLeftBreadcramps()
+{
+	return left_breadcramps;
+}
+
 void Board::printBoard(Pacman pacman, Ghost ghosts[], const int ghosts_count)
 {
 	cout.flush();
@@ -76,8 +86,6 @@ void Board::moveGhost(int ghost_count, Ghost ghosts[], Location lastLocation)
 		int y = ghosts[i].getLocation().getY();
 		int x = ghosts[i].getLocation().getX();
 
-		ghosts[i].setRunOverBreadcramp(board[x][y] == breadcramp_character); //if the ghost is supposed to run over a breadcramp, ghage the falg to true, alse to false
-
 		gotoxy(ghosts[i].getLocation()); //print current location
 		cout << ghosts[i].getCharacter();
 
@@ -97,16 +105,20 @@ void Board::movePacman(Pacman& pacman, diraction _diraction, Location lastLocati
 	gotoxy(lastLocation);
 
 
-	if (getSquareChar(pacman.getLocation().getX(), pacman.getLocation().getY()) == breadcramp_character) {
+	if (getSquareChar(pacman.getLocation().getX(), pacman.getLocation().getY()) == breadcramp_character)
+	{
 		score++;
+		left_breadcramps--;
 		cout << empty_spot;
 	}
-	else if (getSquareChar(pacman.getLocation().getX(), pacman.getLocation().getY()) == wall_caracter) {
+	else if (getSquareChar(pacman.getLocation().getX(), pacman.getLocation().getY()) == wall_caracter) 
+	{
 
 		pacman.setLocation(lastLocation);
 
 	}
-	else if (getSquareChar(pacman.getLocation().getX(), pacman.getLocation().getY()) == magic_tunnel_character) {
+	else if (getSquareChar(pacman.getLocation().getX(), pacman.getLocation().getY()) == magic_tunnel_character) 
+	{
 
 		if (pacman.getLocation().getX() == 0) {
 			//pacman.getLocation().setX(20);

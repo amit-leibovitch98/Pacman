@@ -20,5 +20,5 @@ public:
 	void liveDedaction();
 	void initPacmanLocation();
 	void move(diraction _diraction);
-
+	void goToStart();
 };

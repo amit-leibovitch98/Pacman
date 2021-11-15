@@ -18,18 +18,16 @@ class Game
 	Ghost ghosts[GHOSTS_COUNT];
 	Board board;
 	bool inProgress;
-	int left_breadcramps;
 
 public:
 
-	Game() : pacman(), ghosts{ {{10,1},UP},{{7,39},DOWN} }, board(), inProgress(true), left_breadcramps(1048) {};
+	Game() : pacman(), ghosts{ {{10,1},UP},{{7,39},DOWN} }, board(), inProgress(true) {};
 	Pacman getPacman();
 	void setPacman(Pacman _pacman);
 	int getGhostCount();
 	void setInProgress(bool _inProgress);
 	bool getInProgress();
-	void setLeftBreadcramps(int _left_breadcramps);
-	int getLeftBreadcramps();
+
 	void run();
 	void start();
 	//void printInstruction();
@@ -39,4 +37,7 @@ public:
 	diraction caster(char ch);
 	void checkGameStatus();
 	void caseCollisionPacman();
+	void gameLost();
+	void gameWon();
+
 };

@@ -25,15 +25,7 @@ bool Game::getInProgress()
 	return inProgress;
 }
 
-void Game::setLeftBreadcramps(int _left_breadcramps)
-{
-	left_breadcramps = _left_breadcramps;
-}
 
-int Game::getLeftBreadcramps()
-{
-	return left_breadcramps;
-}
 
 void Game::run()
 {
@@ -88,9 +80,10 @@ void Game::start()
 
 				caseCollisionGhosts();
 			}
-			//caseCollisionPacman();
+			caseCollisionPacman();
 			ghostPace = !ghostPace;
-			checkGameStatus();
+			if (board.getLeftBreadcramps() == 0)
+				gameWon();
 
 		}
 		else
@@ -107,7 +100,7 @@ void Game::start()
 void Game::checkGameStatus()
 {
 
-	if (getLeftBreadcramps() == 0)
+	if (board.getLeftBreadcramps() == 0)
 	{
 		cout << "You Win :)" << endl;
 		inProgress = false;
@@ -180,14 +173,33 @@ void Game::caseCollisionGhosts()
 
 void Game::caseCollisionPacman()
 {
-	//case ghost
-	if (pacman.getLocation().isEqual(ghosts[0].getLocation()) || pacman.getLocation().isEqual(ghosts[1].getLocation()))
+	bool lost = false;
+	for (int i = 0; i < GHOSTS_COUNT && !lost; i++)
 	{
-		pacman.liveDedaction();
-		pacman.initPacmanLocation();
+		if (pacman.getLocation().isEqual(ghosts[i].getLocation()))
+		{
+			pacman.liveDedaction();
+			pacman.initPacmanLocation();
+			for (int i = 0; i < GHOSTS_COUNT; i++)
+			{
+				ghosts[i].initLocation();
+			}
+			lost = true;
+		}
 	}
-
-
+	if (pacman.getLives() == 0)
+		gameLost();
 }
 
+void Game::gameLost()
+{
+	cout << "You Lose!  :(" << endl;
+	 inProgress = !inProgress;
+}
+
+void Game::gameWon()
+{
+	cout << "You Won!  :)" << endl;
+	inProgress = !inProgress;
+}
 

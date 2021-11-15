@@ -1,10 +1,10 @@
 #include "Ghost.h"
 
-Ghost::Ghost(const Ghost& other) :character('$'), run_over_breadcramp(true)
+Ghost::Ghost(const Ghost& other) :character('$')
 {
 	location = other.location;
 	currDiraction = other.currDiraction;
-	run_over_breadcramp = other.run_over_breadcramp;
+	
 }
 
 Ghost& Ghost::operator=(const Ghost& other)
@@ -13,7 +13,7 @@ Ghost& Ghost::operator=(const Ghost& other)
 	{
 		location = other.location;
 		currDiraction = other.currDiraction;
-		run_over_breadcramp = other.run_over_breadcramp;
+		
 	}
 	return *this;
 }
@@ -31,16 +31,6 @@ char Ghost::getCharacter()
 Location Ghost::getLocation()
 {
 	return location;
-}
-
-bool Ghost::getRunOverBreadcramp()
-{
-	return run_over_breadcramp;
-}
-
-void Ghost::setRunOverBreadcramp(bool _run_over_breadcramp)
-{
-	run_over_breadcramp = _run_over_breadcramp;
 }
 
 void Ghost::setCurrDiraction(diraction _currDiraction)
@@ -83,4 +73,9 @@ void Ghost::ghostMoveDecider()
 		setCurrDiraction(DOWN);
 	}
 
+}
+
+void Ghost::initLocation()
+{
+	setLocation(initLoc);
 }

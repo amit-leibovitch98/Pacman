@@ -71,3 +71,9 @@ void Pacman::move(diraction _diraction)
 		location.moveDown();
 	}
 }
+
+void Pacman::goToStart()
+{
+	const static Location initLocation(11, 40);
+	setLocation(initLocation);
+}
