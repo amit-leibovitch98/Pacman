@@ -9,21 +9,22 @@ class Ghost
 private:
 
 	Location location;
+	const Location initLoc;
+	//Location currLocation;
+	//Location lastLocation;
 	diraction currDiraction;
-	bool run_over_breadcramp;
 	const char character;
 
 public:
-	Ghost(Location _location, diraction _currDiraction, bool _run_over_breadcramp = true) :location(_location), currDiraction(_currDiraction), character('$'), run_over_breadcramp(_run_over_breadcramp) {};
+	Ghost(Location _location, diraction _currDiraction) :location(_location), currDiraction(_currDiraction), character('$'), initLoc(_location) {};
 	Ghost(const Ghost& other);
 	Ghost& operator=(const Ghost& other);
 	void setLocation(Location _location);
 	Location getLocation();
 	char getCharacter();
-	bool getRunOverBreadcramp();
-	void setRunOverBreadcramp(bool _run_over_breadcramp);
 	void setCurrDiraction(diraction _currDiraction);
 	diraction getCurrDiraction();
 	void ghostMoveDecider();
+	void initLocation();
 
 };
