@@ -9,11 +9,11 @@ class Pacman
 	int lives;
 
 public:
-	Pacman() :location((40, 11)), lives(3), character('@') {};
+	Pacman() :location({ 11, 40 }), lives(3), character('@') {};
 	Pacman(const Pacman& other);
 	Pacman& operator=(const Pacman& other);
 	void setLocation(Location _location);
-	Location getLocation();
+	Location& getLocation();
 	void setLives(int _lives);
 	int getLives();
 	char getCharacter();

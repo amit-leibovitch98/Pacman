@@ -6,7 +6,7 @@
 
 using namespace std;
 
-enum diraction {RIGHT = 'a', LEFT = 'd', UP = 'w', DOWN = 'x', ESC = 27, STAY = 's', ERR = '0' };
+enum diraction { RIGHT = 'a', LEFT = 'd', UP = 'w', DOWN = 'x', ESC = 27, STAY = 's', ERR = '0' };
 
 class Location
 {

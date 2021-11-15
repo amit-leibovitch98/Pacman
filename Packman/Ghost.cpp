@@ -1,6 +1,6 @@
 #include "Ghost.h"
 
-Ghost::Ghost(const Ghost& other) :character('@'), run_over_breadcramp(true)
+Ghost::Ghost(const Ghost& other) :character('$'), run_over_breadcramp(true)
 {
 	location = other.location;
 	currDiraction = other.currDiraction;

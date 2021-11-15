@@ -1,13 +1,13 @@
 #include "Location.h"
 
 
-Location::Location(const Location& other) 
+Location::Location(const Location& other)
 {
 	x = other.x;
 	y = other.y;
 }
 
-Location& Location::operator=(const Location& other) 
+Location& Location::operator=(const Location& other)
 {
 	if (this != &other) {
 		x = other.x;
@@ -36,7 +36,7 @@ int Location::getY()
 	return y;
 }
 
-bool Location::isEqual(Location other) 
+bool Location::isEqual(Location other)
 {
 	bool ans = false;
 	if (x == other.getX()) {
@@ -70,14 +70,9 @@ void Location::move(diraction _diraction)
 		pauseGame();
 }
 
-void Location::moveRight()
+void Location::moveDown()
 {
-	setY(getY() + 1);
-}
-
-void Location::moveLeft()
-{
-	setY(getY() - 1);
+	setX(getX() + 1);
 }
 
 void Location::moveUp()
@@ -85,15 +80,24 @@ void Location::moveUp()
 	setX(getX() - 1);
 }
 
-void Location::moveDown()
+void Location::moveLeft()
+{
+	setY(getY() - 1);
+}
+
+void Location::moveRight()
 {
 	//if board[getx+1, gety] != wall
-	setX(getX() + 1);
+	setY(getY() + 1);
 	//else
 }
 
-void Location::pauseGame() 
+void Location::pauseGame()
 {
+
 	cout << "Game paused, press ESC again to continue" << endl;
-	while (!_kbhit() || _getch() != 27) {}
+	while (_getch() != 27) {
+
+	}
 }
+

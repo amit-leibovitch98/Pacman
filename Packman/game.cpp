@@ -25,7 +25,7 @@ bool Game::getInProgress()
 	return inProgress;
 }
 
-void Game:: setLeftBreadcramps(int _left_breadcramps)
+void Game::setLeftBreadcramps(int _left_breadcramps)
 {
 	left_breadcramps = _left_breadcramps;
 }
@@ -35,7 +35,7 @@ int Game::getLeftBreadcramps()
 	return left_breadcramps;
 }
 
-void Game::run() 
+void Game::run()
 {
 	int input;
 	cout << "Please enter the following option: " << endl;
@@ -49,75 +49,76 @@ void Game::run()
 	{
 		start();
 	}
-	else if (input == 8) 
+	else if (input == 8)
 	{
 		//printInstruction();
 	}
 
 }
 
-void Game::start() 
+void Game::start()
 {
-	
+
 	board.printBoard(pacman, ghosts, GHOSTS_COUNT);
-	cout << "Press any move to start" << endl;
-
-	//the condition for continuing the game
-	while (inProgress)
-	{
-		move();
-	}
-
-}
-
-void Game::move()
-{
 	bool ghostPace = true;
 	char currStep = _getch();
+	Location lastLocationGhost;
+	Location lastLocationPacman;
 
-	while (getInProgress())
+	diraction _diraction = caster(currStep);
+
+	while (inProgress)
 	{
-		diraction _diraction = caster(currStep);
-
-		while (!_kbhit() || currStep != ESC)
-		{
-			for(int i = 0; i < GHOSTS_COUNT; i++)
-			{
-				ghosts[i].ghostMoveDecider();
-				board.moveGhost(GHOSTS_COUNT, ghosts);
-			}
-
-			caseCollisionGhosts();
-
+		if (_kbhit()) {
+			currStep = _getch();
+			_diraction = caster(currStep);
+		}
+		if (_diraction != ESC || _diraction != ERR) {
+			lastLocationPacman = pacman.getLocation();
 			pacman.getLocation().move(_diraction);
-			board.movePacman(pacman, _diraction);
+			board.movePacman(pacman, _diraction, lastLocationPacman);
+			//caseCollisionPacman();
+			if (ghostPace == true) {
+				for (int i = 0; i < GHOSTS_COUNT; i++)
+				{
+					lastLocationGhost = ghosts[i].getLocation();
+					ghosts[i].ghostMoveDecider();
+					board.moveGhost(GHOSTS_COUNT, ghosts, lastLocationGhost);
+				}
 
+				caseCollisionGhosts();
+			}
+			//caseCollisionPacman();
 			ghostPace = !ghostPace;
 			checkGameStatus();
+
 		}
-		if (currStep == ESC)
+		else
 		{
-			cout << "Game Paused. Press ESC again to continue" << endl;
-			currStep = caster(_getch()); // expected esc again
+			//cout << "Game Paused. Press ESC again to continue" << endl;
+			//currStep = caster(_getch()); // expected esc again
 		}
 	}
+
 }
 
-bool Game::checkGameStatus()
+
+
+void Game::checkGameStatus()
 {
 
-	if (pacman.getLives() == 0)
+	if (getLeftBreadcramps() == 0)
 	{
 		cout << "You Win :)" << endl;
 		inProgress = false;
 	}
-	else if (board.countBreadcramps() == 0)
+	else if (pacman.getLives() == 0)
 	{
 		cout << "You Lose :(" << endl;
 		inProgress = false;
 
 	}
-	return inProgress;
+
 }
 
 diraction Game::caster(char ch)
@@ -154,6 +155,7 @@ diraction Game::caster(char ch)
 
 void Game::caseCollisionGhosts()
 {
+	Location lastLocationGhost;
 	if (ghosts[0].getLocation().isEqual(ghosts[1].getLocation()))
 	{
 		if (ghosts[0].getCurrDiraction() == RIGHT)
@@ -173,6 +175,7 @@ void Game::caseCollisionGhosts()
 			ghosts[0].getLocation().moveDown();
 		}
 	}
+
 }
 
 void Game::caseCollisionPacman()
@@ -184,5 +187,7 @@ void Game::caseCollisionPacman()
 		pacman.initPacmanLocation();
 	}
 
-	//case wall
+
 }
+
+

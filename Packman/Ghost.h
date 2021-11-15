@@ -15,10 +15,10 @@ private:
 
 public:
 	Ghost(Location _location, diraction _currDiraction, bool _run_over_breadcramp = true) :location(_location), currDiraction(_currDiraction), character('$'), run_over_breadcramp(_run_over_breadcramp) {};
-	Ghost (const Ghost& other);
+	Ghost(const Ghost& other);
 	Ghost& operator=(const Ghost& other);
 	void setLocation(Location _location);
-	Location getLocation();	
+	Location getLocation();
 	char getCharacter();
 	bool getRunOverBreadcramp();
 	void setRunOverBreadcramp(bool _run_over_breadcramp);
