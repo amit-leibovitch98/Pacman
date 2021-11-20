@@ -21,6 +21,11 @@ char Board::getWallCharacter()
 	return wall_caracter;
 }
 
+int Board::getbreadcrampsNum()
+{
+	return breadcrampsNum;
+}
+
 int Board::getScore()
 {
 	return score;
@@ -83,7 +88,8 @@ void Board::moveGhost(int ghost_count, Ghost& ghosts, Pacman pacman)
 
 }
 
-char& Board::getSquareChar(int x, int y) {
+char& Board::getSquareChar(int x, int y) 
+{
 	return board[x][y];
 }
 
@@ -92,45 +98,62 @@ void Board::movePacman(Pacman& pacman, diraction _diraction)
 
 	gotoxy(pacman.getLastLocation());
 
-
-	if (getSquareChar(pacman.getLocation().getX(), pacman.getLocation().getY()) == breadcramp_character) {
+	if (getSquareChar(pacman.getLocation().getX(), pacman.getLocation().getY()) == breadcramp_character) 
+	{
 		score++;
 		getSquareChar(pacman.getLocation().getX(), pacman.getLocation().getY()) = empty_spot;
 		cout << empty_spot;
 		gotoxy(pacman.getLocation());
 		cout << pacman.getCharacter();
-
+		
 	}
-	else if (getSquareChar(pacman.getLocation().getX(), pacman.getLocation().getY()) == wall_caracter) {
+	else if (getSquareChar(pacman.getLocation().getX(), pacman.getLocation().getY()) == wall_caracter)
+	{
 
 		pacman.setLocation(pacman.getLastLocation());
 		gotoxy(pacman.getLocation());
 		cout << pacman.getCharacter();
 
 	}
-	else if (getSquareChar(pacman.getLocation().getX(), pacman.getLocation().getY()) == empty_spot) {
+	else if (getSquareChar(pacman.getLocation().getX(), pacman.getLocation().getY()) == empty_spot)
+	{
 		gotoxy(pacman.getLocation());
 		cout << pacman.getCharacter();
 		gotoxy(pacman.getLastLocation());
 		cout << empty_spot;
 	}
-	else if (getSquareChar(pacman.getLocation().getX(), pacman.getLocation().getY()) == magic_tunnel_character) {
+	else if (getSquareChar(pacman.getLocation().getX(), pacman.getLocation().getY()) == magic_tunnel_character)
+	{
+		gotoxy(pacman.getLastLocation());
+		cout << empty_spot;
 
-		if (pacman.getLocation().getX() == 0) {
-			//pacman.getLocation().setX(20);
-		}
-		else {
-			//pacman.getLocation().setX(1);
-		}
+		magicTunnelCase(pacman);
+
+		gotoxy(pacman.getLocation());
+		cout << pacman.getCharacter();
 	}
-
-
 
 	gotoxy((BOARD_WIDTH, BOARD_HIGHT));
 	cout << "Lives: " << pacman.getLives() << " | Score: " << score << endl;
 	Sleep(200);
 }
 
+void Board::magicTunnelCase(Pacman& pacman)
+{
+	int x = pacman.getLocation().getX();
+	int y = pacman.getLocation().getY();
+	int newY;
+
+	if (y == 0)
+	{
+		newY = BOARD_WIDTH - 4;
+	}
+	else
+	{
+		newY = 1;
+	}
+	pacman.getLocation().setY(newY);
+}
 
 void Board::gotoxy(Location location)
 {

@@ -29,13 +29,16 @@ void Pacman::setLocation(Location _location)
 {
 	currLocation = _location;
 }
-Location Pacman::getLastLocation() {
+Location Pacman::getLastLocation()
+{
 	return lastLocation;
 }
-Location Pacman::getinitLocation() const {
+Location Pacman::getinitLocation() const 
+{
 	return initLocation;
 }
-void Pacman::setLastLocation(Location location) {
+void Pacman::setLastLocation(Location location)
+{
 	lastLocation = location;
 }
 
