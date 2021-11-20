@@ -71,7 +71,8 @@ void Game::start()
 
 	while (inProgress)
 	{
-		if (collision) {
+		if (collision) 
+		{
 			pacman.initPacmanLocation();
 			ghosts[0].initGhostLocation(0);
 			ghosts[1].initGhostLocation(1);
@@ -81,13 +82,16 @@ void Game::start()
 			lastStep = _diraction;
 			collision = false;
 		}
-		else if (_kbhit()) {
+		else if (_kbhit()) 
+		{
 			currStep = _getch();
 			_diraction = caster(currStep);
-			if (_diraction != ESC && _diraction != ERR && _diraction != STAY) {
+			if (_diraction != ESC && _diraction != ERR && _diraction != STAY) 
+			{
 				lastStep = _diraction;
 			}
-			else if (_diraction == STAY) {
+			else if (_diraction == STAY) 
+			{
 				while (!_kbhit() && !collision) {
 					board.gotoxy(pacman.getLocation());
 					cout << pacman.getCharacter();
@@ -114,7 +118,8 @@ void Game::start()
 				}
 
 			}
-			else if (_diraction == ESC) {
+			else if (_diraction == ESC) 
+			{
 
 				board.gotoxy((80, 23));
 				cout << "Game Paused. Press ESC again to continue";
