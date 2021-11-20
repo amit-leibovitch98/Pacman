@@ -23,7 +23,7 @@ class Game
 
 public:
 
-	Game(bool colors) : COLORS(colors), pacman(), ghosts{ {{10,1},UP},{{7,39},DOWN} }, board(), inProgress(true), left_breadcramps(1048) {};
+	Game(bool colors) : COLORS(colors), pacman(), ghosts{ {{10,1},UP},{{7,39},DOWN} }, board(), inProgress(true){};
 	Pacman getPacman();
 	void setPacman(Pacman _pacman);
 	int getGhostCount();
