@@ -28,5 +28,5 @@ public:
 	void moveUp();
 	void moveDown();
 	bool isEqual(Location other);
-	void pauseGame();
+
 };

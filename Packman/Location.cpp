@@ -40,7 +40,7 @@ bool Location::isEqual(Location other)
 {
 	bool ans = false;
 	if (x == other.getX()) {
-		if (y == other.x) {
+		if (y == other.getY()) {
 			ans = true;
 		}
 	}
@@ -66,8 +66,7 @@ void Location::move(diraction _diraction)
 	{
 		moveDown();
 	}
-	else //esc
-		pauseGame();
+
 }
 
 void Location::moveDown()
@@ -92,12 +91,5 @@ void Location::moveRight()
 	//else
 }
 
-void Location::pauseGame()
-{
 
-	cout << "Game paused, press ESC again to continue" << endl;
-	while (_getch() != 27) {
-
-	}
-}
 
