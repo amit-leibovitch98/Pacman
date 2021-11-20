@@ -13,6 +13,7 @@ using namespace std;
 
 class Game
 {
+	bool COLORS = true;
 	Pacman pacman;
 	static const int GHOSTS_COUNT = 2;
 	Ghost ghosts[GHOSTS_COUNT];
@@ -23,7 +24,7 @@ class Game
 
 public:
 
-	Game() : pacman(), ghosts{ {{10,1},UP},{{7,39},DOWN} }, board(), inProgress(true), left_breadcramps(1048) {};
+	Game(bool colors) : COLORS(colors), pacman(), ghosts{ {{10,1},UP},{{7,39},DOWN} }, board(), inProgress(true), left_breadcramps(1048) {};
 	Pacman getPacman();
 	void setPacman(Pacman _pacman);
 	int getGhostCount();
@@ -33,8 +34,8 @@ public:
 	int getLeftBreadcramps();
 	void run();
 	void start();
-	//void printInstruction();
-	//void exit();
+	void printInstruction();
+	void printMenu();
 	void move();
 	void caseCollisionGhosts();
 	bool caseCollisionPacman();
