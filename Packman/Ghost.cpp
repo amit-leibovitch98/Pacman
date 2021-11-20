@@ -1,36 +1,68 @@
 #include "Ghost.h"
 
-Ghost::Ghost(const Ghost& other) :character('$')
+Ghost::Ghost(const Ghost& other) :character('$'), run_over_breadcramp(true), initLocation(other.initLocation)
 {
-	location = other.location;
+	currLocation = other.currLocation;
 	currDiraction = other.currDiraction;
-	
+	lastLocation = other.lastLocation;
+	run_over_breadcramp = other.run_over_breadcramp;
 }
 
 Ghost& Ghost::operator=(const Ghost& other)
 {
 	if (this != &other)
 	{
-		location = other.location;
+		currLocation = other.currLocation;
 		currDiraction = other.currDiraction;
-		
+		run_over_breadcramp = other.run_over_breadcramp;
 	}
 	return *this;
 }
 
 void Ghost::setLocation(Location _location)
 {
-	location = _location;
+	currLocation = _location;
 }
-
+Location Ghost::getLastLocation() {
+	return lastLocation;
+}
+Location Ghost::getinitLocation() const {
+	return initLocation;
+}
 char Ghost::getCharacter()
 {
 	return character;
 }
+void Ghost::setLastLocation(Location location) {
+	lastLocation = location;
+}
+
+void Ghost::initGhostLocation(int i) {
+	if (i == 0) {
+		Location location(10, 1);
+		setLocation(location);
+		setLastLocation(location);
+	}
+	else {
+		Location location(7, 39);
+		setLocation(location);
+		setLastLocation(location);
+	}
+}
 
 Location Ghost::getLocation()
 {
-	return location;
+	return currLocation;
+}
+
+bool Ghost::getRunOverBreadcramp()
+{
+	return run_over_breadcramp;
+}
+
+void Ghost::setRunOverBreadcramp(bool _run_over_breadcramp)
+{
+	run_over_breadcramp = _run_over_breadcramp;
 }
 
 void Ghost::setCurrDiraction(diraction _currDiraction)
@@ -53,29 +85,24 @@ void Ghost::ghostMoveDecider()
 
 	if (randomMove == 1)
 	{
-		location.moveLeft();
+		currLocation.moveLeft();
 		setCurrDiraction(LEFT);
 	}
 	else if (randomMove == 2)
 	{
-		location.moveRight();
+		currLocation.moveRight();
 		setCurrDiraction(RIGHT);
 
 	}
 	else if (randomMove == 3)
 	{
-		location.moveUp();
+		currLocation.moveUp();
 		setCurrDiraction(UP);
 	}
 	else
 	{
-		location.moveDown();
+		currLocation.moveDown();
 		setCurrDiraction(DOWN);
 	}
 
-}
-
-void Ghost::initLocation()
-{
-	setLocation(initLoc);
 }

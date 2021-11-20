@@ -36,25 +36,22 @@ private:
 
 	const char empty_spot;
 	int score;
-	int left_breadcramps;
 	const char breadcramp_character;
 	const char wall_caracter;
 	const char magic_tunnel_character;
 
 public:
-	Board() :empty_spot(' '), breadcramp_character('.'), score(0), wall_caracter('#'), magic_tunnel_character('|'), left_breadcramps(1048) {};
+	Board() :empty_spot(' '), breadcramp_character('.'), score(0), wall_caracter('#'), magic_tunnel_character('|') {};
 	int getScore();
 	char getBreadcrampCharacter();
 	char getEmptyspot();
 	char getWallCharacter();
 	char getMagicTunnelCharacter();
 	void setScore(int _score);
-	void setLeftBreadcramps(int _left_breadcramps);
-	int getLeftBreadcramps();
-	char getSquareChar(int x, int y);
+	char& getSquareChar(int x, int y);
 	void printBoard(Pacman pacman, Ghost ghosts[], const int ghosts_count);
-	void moveGhost(int ghost_count, Ghost ghosts[], Location lastLocation);
-	void movePacman(Pacman& pacman, diraction _diraction, Location lastLocation);
+	void moveGhost(int ghost_count, Ghost& ghosts, Pacman pacman);
+	void movePacman(Pacman& pacman, diraction _diraction);
 	void gotoxy(Location location);
 
 };
