@@ -25,15 +25,7 @@ bool Game::getInProgress()
 	return inProgress;
 }
 
-void Game::setLeftBreadcramps(int _left_breadcramps)
-{
-	left_breadcramps = _left_breadcramps;
-}
 
-int Game::getLeftBreadcramps()
-{
-	return left_breadcramps;
-}
 
 void Game::run()
 {
@@ -95,7 +87,7 @@ void Game::start()
 				while (!_kbhit() && !collision) {
 					board.gotoxy(pacman.getLocation());
 					cout << pacman.getCharacter();
-					Sleep(200);
+					Sleep(100);
 					if (ghostPace == true) {
 						for (int i = 0; i < GHOSTS_COUNT; i++)
 						{
@@ -108,10 +100,10 @@ void Game::start()
 
 					collision = caseCollisionPacman();
 
-
 					ghostPace = !ghostPace;
 				}
-				if (!collision) {
+				if (!collision) 
+				{
 					currStep = _getch();
 					_diraction = caster(currStep);
 					lastStep = _diraction;
@@ -130,7 +122,8 @@ void Game::start()
 
 		}
 
-		if (!collision) {
+		if (!collision) 
+		{
 			pacman.setLastLocation(pacman.getLocation());
 			pacman.getLocation().move(lastStep);
 			board.movePacman(pacman, lastStep);
@@ -145,7 +138,8 @@ void Game::start()
 
 
 			}
-			if (!collision) {
+			if (!collision)
+			{
 				collision = caseCollisionPacman();
 			}
 
@@ -161,7 +155,8 @@ void Game::start()
 
 
 
-bool Game::caseCollisionPacman() {
+bool Game::caseCollisionPacman()
+{
 	bool ans = false;
 	if (pacman.getLocation().isEqual(ghosts[0].getLocation()) ||
 		pacman.getLocation().isEqual(ghosts[1].getLocation())) {
@@ -174,7 +169,7 @@ bool Game::caseCollisionPacman() {
 void Game::checkGameStatus()
 {
 
-	if (getLeftBreadcramps() == 0)
+	if (board.getScore() == board.getbreadcrampsNum())
 	{
 		cout.flush();
 		system("cls");
