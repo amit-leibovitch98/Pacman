@@ -34,6 +34,7 @@ private:
 	"##############################################################################"
 	};
 
+
 	const char empty_spot = ' ';
 	int score;
 	int const BREADCRAMPS_NUM = 1064;
