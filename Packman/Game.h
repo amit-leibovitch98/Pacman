@@ -34,10 +34,9 @@ public:
 	void start();
 	void printInstruction();
 	void printMenu();
-	void move();
 	void caseCollisionGhosts();
 	bool caseCollisionPacman();
 	diraction caster(char ch);
 	void checkGameStatus();
-	//void caseCollisionPacman();
+
 };

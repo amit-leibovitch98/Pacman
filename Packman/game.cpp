@@ -49,6 +49,7 @@ void Game::printInstruction()
 {
 	if (COLORS)
 	{
+		cout << "\n" << endl;
 		cout << "\x1B[92m               W- Up                \033[0m\t\t" << endl;
 		cout << "\x1B[92m    A- Left             D- Right   \033[0m\t\t" << endl;
 		cout << "\x1B[92m              X- Down               \033[0m\t\t" << endl;
@@ -66,6 +67,7 @@ void Game::printInstruction()
 	}
 	else
 	{
+		cout << "\n" << endl;
 		cout << "          W- up                " << endl;
 		cout << "A- Left              D- Right  " << endl;
 		cout << "         X- Down               " << endl;
@@ -92,6 +94,7 @@ void Game::run()
 
 	while (input != 1 && !exit)
 	{
+		system("cls");
 		if (input == 8)
 			printInstruction();
 		else if (input == 9)
@@ -99,7 +102,6 @@ void Game::run()
 		else if (input == 7)
 			printMenu();
 		cin >> input;
-		system("cls");
 	}
 
 	if(!exit)
