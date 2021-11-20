@@ -19,7 +19,6 @@ class Game
 	Ghost ghosts[GHOSTS_COUNT];
 	Board board;
 	bool inProgress;
-	int left_breadcramps;
 	diraction lastStep;
 
 public:
@@ -30,8 +29,7 @@ public:
 	int getGhostCount();
 	void setInProgress(bool _inProgress);
 	bool getInProgress();
-	void setLeftBreadcramps(int _left_breadcramps);
-	int getLeftBreadcramps();
+	
 	void run();
 	void start();
 	void printInstruction();
