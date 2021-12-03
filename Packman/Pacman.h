@@ -15,7 +15,7 @@ public:
 	Pacman(const Pacman& other);
 	Pacman& operator=(const Pacman& other);
 	void setLocation(Location _location);
-	Location& getLocation();
+	Location getLocation();
 	Location getLastLocation();
 	void setLastLocation(Location location);
 	Location getinitLocation() const;
