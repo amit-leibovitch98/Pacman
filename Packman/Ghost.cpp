@@ -1,10 +1,7 @@
 #include "Ghost.h"
 
-Ghost::Ghost(const Ghost& other) :character('$'), run_over_breadcramp(true), initLocation(other.initLocation)
+Ghost::Ghost(const Ghost& other) : Creature(other)
 {
-	currLocation = other.currLocation;
-	currDiraction = other.currDiraction;
-	lastLocation = other.lastLocation;
 	run_over_breadcramp = other.run_over_breadcramp;
 }
 
@@ -12,67 +9,10 @@ Ghost& Ghost::operator=(const Ghost& other)
 {
 	if (this != &other)
 	{
-		currLocation = other.currLocation;
-		currDiraction = other.currDiraction;
+		Creature::operator=(other);
 		run_over_breadcramp = other.run_over_breadcramp;
 	}
 	return *this;
-}
-
-void Ghost::setLocation(Location _location)
-{
-	currLocation = _location;
-}
-Location Ghost::getLastLocation() {
-	return lastLocation;
-}
-Location Ghost::getinitLocation() const {
-	return initLocation;
-}
-char Ghost::getCharacter()
-{
-	return character;
-}
-void Ghost::setLastLocation(Location location) {
-	lastLocation = location;
-}
-
-void Ghost::initGhostLocation(int i) {
-	if (i == 0) {
-		Location location(10, 1);
-		setLocation(location);
-		setLastLocation(location);
-	}
-	else {
-		Location location(7, 39);
-		setLocation(location);
-		setLastLocation(location);
-	}
-}
-
-Location Ghost::getLocation()
-{
-	return currLocation;
-}
-
-bool Ghost::getRunOverBreadcramp()
-{
-	return run_over_breadcramp;
-}
-
-void Ghost::setRunOverBreadcramp(bool _run_over_breadcramp)
-{
-	run_over_breadcramp = _run_over_breadcramp;
-}
-
-void Ghost::setCurrDiraction(diraction _currDiraction)
-{
-	currDiraction = _currDiraction;
-}
-
-diraction Ghost::getCurrDiraction()
-{
-	return currDiraction;
 }
 
 void Ghost::ghostMoveDecider()
@@ -105,4 +45,27 @@ void Ghost::ghostMoveDecider()
 		setCurrDiraction(DOWN);
 	}
 
+}
+
+void Ghost::initGhostLocation(int i) {
+	if (i == 0) {
+		Location location(10, 1);
+		setLocation(location);
+		setLastLocation(location);
+	}
+	else {
+		Location location(7, 39);
+		setLocation(location);
+		setLastLocation(location);
+	}
+}
+
+bool Ghost::getRunOverBreadcramp()
+{
+	return run_over_breadcramp;
+}
+
+void Ghost::setRunOverBreadcramp(bool _run_over_breadcramp)
+{
+	run_over_breadcramp = _run_over_breadcramp;
 }
