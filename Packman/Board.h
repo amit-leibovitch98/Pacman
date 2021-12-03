@@ -42,8 +42,9 @@ private:
 	const char wall_caracter = '#';
 	const char magic_tunnel_character = '|';
 
+
 public:
-	Board() :score(0){};
+	Board() :score(0) {};
 	int getScore();
 	char getBreadcrampCharacter();
 	char getEmptyspot();

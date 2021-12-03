@@ -29,7 +29,7 @@ public:
 	int getGhostCount();
 	void setInProgress(bool _inProgress);
 	bool getInProgress();
-	
+
 	void run();
 	void start();
 	void printInstruction();

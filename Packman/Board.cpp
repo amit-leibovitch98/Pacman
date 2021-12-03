@@ -72,7 +72,7 @@ void Board::printBoard(Pacman pacman, Ghost ghosts[], const int ghosts_count, bo
 	gotoxy(pacman.getinitLocation());
 	printPacman(pacman.getCharacter(), COLORS);
 
-	for (int i = 0; i < ghosts_count; i++) 
+	for (int i = 0; i < ghosts_count; i++)
 	{
 		gotoxy(ghosts[i].getinitLocation());
 		printGhost(ghosts[i].getCharacter(), COLORS);
@@ -112,7 +112,7 @@ void Board::moveGhost(int ghost_count, Ghost& ghosts, Pacman pacman, bool COLORS
 	printGhost(ghosts.getCharacter(), COLORS);
 }
 
-char& Board::getSquareChar(int x, int y) 
+char& Board::getSquareChar(int x, int y)
 {
 	return board[x][y];
 }
@@ -122,7 +122,7 @@ void Board::movePacman(Pacman& pacman, diraction _diraction, bool COLORS)
 
 	gotoxy(pacman.getLastLocation());
 
-	if (getSquareChar(pacman.getLocation().getX(), pacman.getLocation().getY()) == breadcramp_character) 
+	if (getSquareChar(pacman.getLocation().getX(), pacman.getLocation().getY()) == breadcramp_character)
 	{
 		score++;
 		getSquareChar(pacman.getLocation().getX(), pacman.getLocation().getY()) = empty_spot;
@@ -130,7 +130,7 @@ void Board::movePacman(Pacman& pacman, diraction _diraction, bool COLORS)
 		gotoxy(pacman.getLocation());
 		printPacman(pacman.getCharacter(), COLORS);
 
-		
+
 	}
 	else if (getSquareChar(pacman.getLocation().getX(), pacman.getLocation().getY()) == wall_caracter)
 	{
@@ -180,7 +180,8 @@ void Board::magicTunnelCase(Pacman& pacman)
 	{
 		newY = 1;
 	}
-	pacman.getLocation().setY(newY);
+	Location newLocation(x, newY);
+	pacman.setLocation(newLocation);
 }
 
 void Board::gotoxy(Location location)
@@ -193,4 +194,3 @@ void Board::gotoxy(Location location)
 	hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleCursorPosition(hConsoleOutput, dwCursorPosition);
 }
-
