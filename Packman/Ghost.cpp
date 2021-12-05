@@ -25,23 +25,23 @@ void Ghost::ghostMoveDecider()
 
 	if (randomMove == 1)
 	{
-		currLocation.moveLeft();
+		getCurrLocation().moveLeft();
 		setCurrDiraction(LEFT);
 	}
 	else if (randomMove == 2)
 	{
-		currLocation.moveRight();
+		getCurrLocation().moveRight();
 		setCurrDiraction(RIGHT);
 
 	}
 	else if (randomMove == 3)
 	{
-		currLocation.moveUp();
+		getCurrLocation().moveUp();
 		setCurrDiraction(UP);
 	}
 	else
 	{
-		currLocation.moveDown();
+		getCurrLocation().moveDown();
 		setCurrDiraction(DOWN);
 	}
 
@@ -50,12 +50,12 @@ void Ghost::ghostMoveDecider()
 void Ghost::initGhostLocation(int i) {
 	if (i == 0) {
 		Location location(10, 1);
-		setLocation(location);
+		setCurrLocation(location);
 		setLastLocation(location);
 	}
 	else {
 		Location location(7, 39);
-		setLocation(location);
+		setCurrLocation(location);
 		setLastLocation(location);
 	}
 }

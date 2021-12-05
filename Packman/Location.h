@@ -18,6 +18,8 @@ public:
 	Location(int _x = 0, int _y = 0) : x(_x), y(_y) {}
 	Location(const Location& other);
 	Location& operator=(const Location& other);
+	bool operator==(const Location& other)const;
+	bool operator!=(const Location& other)const;
 	void setX(int _x);
 	void setY(int _y);
 	int getX();
@@ -27,6 +29,6 @@ public:
 	void moveLeft();
 	void moveUp();
 	void moveDown();
-	bool isEqual(Location other);
+
 
 };

@@ -8,9 +8,10 @@ private:
 	Location lastLocation;
 	const Location initLocation;
 	diraction currDiraction;
-	const char character;
+	char character;
 
 public:
+	Creature() = default;
 	Creature(char _character, Location _initLocation, Location _lastLocation, Location _currLocation, diraction _currDiraction = RIGHT) :
 		currLocation(_currLocation), lastLocation(_lastLocation), initLocation(_initLocation), currDiraction(_currDiraction), character(_character) {};
 	Creature(char _character, Location _Location, diraction _currDiraction = RIGHT) :

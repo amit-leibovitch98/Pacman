@@ -2,6 +2,7 @@
 
 #include "Pacman.h"
 #include "Ghost.h"
+#include "Fruit.h"
 
 
 class Board
@@ -59,6 +60,7 @@ public:
 	void printBoard(Pacman pacman, Ghost ghosts[], const int ghosts_count, bool COLORS);
 	void moveGhost(int ghost_count, Ghost& ghosts, Pacman pacman, bool COLORS);
 	void movePacman(Pacman& pacman, diraction _diraction, bool COLORS);
+	void moveFruit(Fruit& fruit, Ghost ghost[], int arrSize, Location pacmanLocation);
 	void magicTunnelCase(Pacman& pacman);
 	void gotoxy(Location location);
 

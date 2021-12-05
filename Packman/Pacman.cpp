@@ -7,12 +7,15 @@ Pacman::Pacman(const Pacman& other) :Creature(other)
 
 Pacman& Pacman::operator=(const Pacman& other)
 {
-	if (this != &other) 
+	if (this != &other)
 	{
 		Creature::operator=(other);
 		lives = other.lives;
 	}
 	return *this;
+}
+void Pacman::initPacmanLocation() {
+	getCurrLocation() = (11, 40);
 }
 
 void Pacman::setLives(int _lives)

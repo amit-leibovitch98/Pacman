@@ -20,7 +20,7 @@ Location Creature::getCurrLocation()
 	return currLocation;
 }
 
-Location Creature::getLastLocation() 
+Location Creature::getLastLocation()
 {
 	return lastLocation;
 }

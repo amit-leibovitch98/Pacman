@@ -104,8 +104,28 @@ void Game::run()
 		cin >> input;
 	}
 
-	if (!exit)
+	if (!exit) {
+		char level;
+		cout << "Please enter the following level: " << endl;
+		cout << "(a) BEST" << endl;
+		cout << "(b) GOOD" << endl;
+		cout << "(c) NOVICE" << endl;
+		cin >> level;
+		//CREATE HERE THE STRATEGY OF MOVING GHOSTS and pass it as parameter to game
+		//There is a problem about the ghost- its array and the strategy get it as pointer-not good.
+		Location pacmanLoc = pacman.getCurrLocation();
+		if (level == 'a') {
+			strategy = new GhostMoveStrategyA(ghosts, &pacmanLoc);
+		}
+		else if (level == 'b') {
+			strategy = new GhostMoveStrategyB(ghosts, &pacmanLoc);
+		}
+		else {
+			strategy = new GhostMoveStrategyC(ghosts, &pacmanLoc);
+		}
 		start();
+	}
+
 }
 
 void Game::start()
@@ -125,6 +145,7 @@ void Game::start()
 	{
 		if (collision)
 		{
+			//if the pacman meet ghost
 			pacman.initPacmanLocation();
 			ghosts[0].initGhostLocation(0);
 			ghosts[1].initGhostLocation(1);
@@ -145,13 +166,13 @@ void Game::start()
 			else if (_diraction == STAY)
 			{
 				while (!_kbhit() && !collision) {
-					board.gotoxy(pacman.getLocation());
+					board.gotoxy(pacman.getCurrLocation());
 					board.printPacman(pacman.getCharacter(), COLORS);
 					Sleep(150);
 					if (ghostPace == true) {
 						for (int i = 0; i < GHOSTS_COUNT; i++)
 						{
-							ghosts[i].setLastLocation(ghosts[i].getLocation());
+							ghosts[i].setLastLocation(ghosts[i].getCurrLocation());
 							ghosts[i].ghostMoveDecider();
 							board.moveGhost(GHOSTS_COUNT, ghosts[i], pacman, COLORS);
 						}
@@ -184,14 +205,15 @@ void Game::start()
 
 		if (!collision)
 		{
-			pacman.setLastLocation(pacman.getLocation());
+			//the game continue regullary
+			pacman.setLastLocation(pacman.getCurrLocation());
 			pacman.move(lastStep);
 			board.movePacman(pacman, lastStep, COLORS);
 			collision = caseCollisionPacman();
 			if (ghostPace == true) {
 				for (int i = 0; i < GHOSTS_COUNT; i++)
 				{
-					ghosts[i].setLastLocation(ghosts[i].getLocation());
+					ghosts[i].setLastLocation(ghosts[i].getCurrLocation());
 					ghosts[i].ghostMoveDecider();
 					board.moveGhost(GHOSTS_COUNT, ghosts[i], pacman, COLORS);
 				}
@@ -202,24 +224,58 @@ void Game::start()
 			{
 				collision = caseCollisionPacman();
 			}
+			if (countPaces % 17) 
+			{
+				//the case that fruit appears on the board
+				fruitMode = true;
+				Location fruitLoc = randomLocation();
+				fruit = Fruit(fruitLoc);
+				fruit.move();
+				board.moveFruit(fruit, ghosts, GHOSTS_COUNT, pacman.getCurrLocation());
+
+
+			}
+			if (countPaces > 17 && countPaces % 12)
+			{
+				//the case that fruit disapperas
+				fruitMode = false;
+				board.gotoxy(fruit.getCurrLocation());
+				cout << ' ';
+			}
+			if (fruitMode) {
+				fruit.move();
+				board.moveFruit(fruit, ghosts, GHOSTS_COUNT, pacman.getCurrLocation());
+			}
 
 			ghostPace = !ghostPace;
 			checkGameStatus();
 
 		}
+		countPaces++;
 	}
-
 
 
 }
 
+Location& Game::randomLocation()
+{
+	srand(time(NULL));
+	int randomX = rand() % 21 + 1;
+	int randomY = rand() % 79 + 1;
+	while (board.getSquareChar(randomX, randomY) == '#') {
+		randomX = rand() % 21 + 1;
+		randomY = rand() % 79 + 1;
+	}
+	Location fruitLoc(randomX, randomY);
+	return fruitLoc;
 
+}
 
 bool Game::caseCollisionPacman()
 {
 	bool ans = false;
-	if (pacman.getLocation().isEqual(ghosts[0].getLocation()) ||
-		pacman.getLocation().isEqual(ghosts[1].getLocation())) {
+	if (pacman.getCurrLocation() == (ghosts[0].getCurrLocation()) ||
+		pacman.getCurrLocation() == (ghosts[1].getCurrLocation())) {
 		ans = true;
 		pacman.liveDedaction();
 	}
@@ -282,28 +338,24 @@ diraction Game::caster(char ch)
 void Game::caseCollisionGhosts()
 {
 	Location lastLocationGhost;
-	if (ghosts[0].getLocation().isEqual(ghosts[1].getLocation()))
+	if (ghosts[0].getCurrLocation() == (ghosts[1].getCurrLocation()))
 	{
 		if (ghosts[0].getCurrDiraction() == RIGHT)
 		{
-			ghosts[0].getLocation().moveRight();
+			ghosts[0].getCurrLocation().moveRight();
 		}
 		else if (ghosts[0].getCurrDiraction() == LEFT)
 		{
-			ghosts[0].getLocation().moveLeft();
+			ghosts[0].getCurrLocation().moveLeft();
 		}
 		else if (ghosts[0].getCurrDiraction() == UP)
 		{
-			ghosts[0].getLocation().moveUp();
+			ghosts[0].getCurrLocation().moveUp();
 		}
 		else if (ghosts[0].getCurrDiraction() == DOWN)
 		{
-			ghosts[0].getLocation().moveDown();
+			ghosts[0].getCurrLocation().moveDown();
 		}
 	}
 
 }
-
-
-
-
