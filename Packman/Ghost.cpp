@@ -69,3 +69,5 @@ void Ghost::setRunOverBreadcramp(bool _run_over_breadcramp)
 {
 	run_over_breadcramp = _run_over_breadcramp;
 }
+
+

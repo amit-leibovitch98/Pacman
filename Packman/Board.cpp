@@ -36,6 +36,43 @@ void Board::setScore(int _score)
 	score = _score;
 }
 
+char& Board::getSquareChar(int x, int y)
+{
+	return board[x][y];
+}
+
+void Board::setFile(ifstream* _board_file)
+{
+	board_file = _board_file;
+}
+
+//----------------------------------------------------------------------------------------------------------
+
+void Board::fileToMatrix()
+{
+	char temp;
+	int i = 0;
+	while (!board_file->eof())
+	{
+		temp = board_file->get();
+		if (temp == '/n')
+		{
+			i++;
+		}
+		else if (temp == data_start)
+		{
+			data_start_line = i;
+		}
+		else
+		{
+			board[i].push_back(temp);
+		}
+	}
+
+
+}
+
+
 void Board::printGhost(char ghost_character, bool COLORS)
 {
 	if (COLORS)
@@ -60,28 +97,44 @@ void Board::printBoardEndLine(Pacman pacman, bool COLORS)
 		cout << "Lives: " << pacman.getLives() << "                                                   Score: " << score << endl;
 }
 
-void Board::printBoard(Pacman pacman, Ghost ghosts[], const int ghosts_count, bool COLORS)
+void Board::printBoard(Pacman pacman, Ghost ghosts[], const int GHOST_COUNT, bool COLORS)
 {
 	cout.flush();
 	system("cls");
 
-	for (int i = 0; i < BOARD_HIGHT; i++)
-	{
-		cout << board[i] << endl;
-	}
-	gotoxy(pacman.getinitLocation());
-	printPacman(pacman.getCharacter(), COLORS);
+	int ghosts_counter = 0;
 
-	for (int i = 0; i < ghosts_count; i++)
+	for (int i = 0; i < board.size(); i++)
 	{
-		gotoxy(ghosts[i].getinitLocation());
-		printGhost(ghosts[i].getCharacter(), COLORS);
+		for (int j = 0; j < board[i].size(); j++)
+		{
+			if (board[i][j] == '#')
+				cout << wall_caracter;
+			else if (board[i][j] == '@')
+			{
+				printPacman(pacman.getCharacter(), COLORS);
+				pacman.setCurrLocation({ i,j }); //init!!
+			}
+			else if (board[i][j] == '$')
+			{
+				printGhost(ghosts[ghosts_counter].getCharacter(), COLORS);
+				ghosts[ghosts_counter].setCurrLocation({ i,j });
+				ghosts_counter++;
+			}
+			else if (board[i][j] == '%')
+				cout << empty_spot;
+			else if (board[i][j] == '&')
+				printBoardEndLine(pacman, COLORS);
+			else if (board[i][j] == ' ')
+				cout << breadcramp_character;
+		}
+
 	}
 
-	gotoxy((BOARD_WIDTH, BOARD_HIGHT));
-	printBoardEndLine(pacman, COLORS);
+
 }
 
+//----------------------------------------------------------------------------------------------------------
 
 void Board::moveGhost(int ghost_count, Ghost& ghosts, Pacman pacman, bool COLORS)
 {
@@ -110,11 +163,6 @@ void Board::moveGhost(int ghost_count, Ghost& ghosts, Pacman pacman, bool COLORS
 
 	gotoxy(ghosts.getCurrLocation()); //print current location
 	printGhost(ghosts.getCharacter(), COLORS);
-}
-
-char& Board::getSquareChar(int x, int y)
-{
-	return board[x][y];
 }
 
 void Board::movePacman(Pacman& pacman, diraction _diraction, bool COLORS)
@@ -171,8 +219,14 @@ void Board::moveFruit(Fruit& fruit, Ghost ghosts[], int arrSize, Location pacman
 	gotoxy(fruit.getLastLocation());
 	if (pacmanLocation == fruit.getCurrLocation()) {
 		specialCases = true;
+		fruit.setMeetPacman(true);
 		cout << empty_spot;
-		score = score + (int)fruit.getCharacter();
+		score = score + fruit.getCharacter();
+	}
+	else if (getSquareChar(fruit.getCurrLocation().getX(), fruit.getCurrLocation().getY()) == wall_caracter) {
+		fruit.setCurrLocation(fruit.getLastLocation());
+
+
 	}
 	else if (getSquareChar(fruit.getCurrLocation().getX(), fruit.getCurrLocation().getY()) == magic_tunnel_character) {
 		fruit.move();
@@ -183,15 +237,19 @@ void Board::moveFruit(Fruit& fruit, Ghost ghosts[], int arrSize, Location pacman
 			if (fruit.getCurrLocation() == ghosts[i].getCurrLocation()) {
 				specialCases = true;
 				collision = true;
+				fruit.setMeetGhost(true);
 				cout << empty_spot;
 				cout << ghosts[i].getCharacter();
 			}
 		}
 	}
 	if (!specialCases) {
+		cout << getSquareChar(fruit.getLastLocation().getX(), fruit.getLastLocation().getY());
 		gotoxy(fruit.getCurrLocation());
-		cout << (int)fruit.getCharacter();
+		cout << fruit.getCharacter();
+
 	}
+
 
 
 }

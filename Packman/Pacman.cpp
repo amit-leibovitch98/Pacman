@@ -15,7 +15,7 @@ Pacman& Pacman::operator=(const Pacman& other)
 	return *this;
 }
 void Pacman::initPacmanLocation() {
-	getCurrLocation() = (11, 40);
+	getCurrLocation() = Location::Location(11, 40);
 }
 
 void Pacman::setLives(int _lives)

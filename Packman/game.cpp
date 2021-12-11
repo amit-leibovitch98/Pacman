@@ -115,13 +115,13 @@ void Game::run()
 		//There is a problem about the ghost- its array and the strategy get it as pointer-not good.
 		Location pacmanLoc = pacman.getCurrLocation();
 		if (level == 'a') {
-			strategy = new GhostMoveStrategyA(ghosts, &pacmanLoc);
+			strategy = new GhostMoveStrategyA(ghosts, &pacmanLoc, &board);
 		}
 		else if (level == 'b') {
-			strategy = new GhostMoveStrategyB(ghosts, &pacmanLoc);
+			strategy = new GhostMoveStrategyB(ghosts, &pacmanLoc, &board);
 		}
 		else {
-			strategy = new GhostMoveStrategyC(ghosts, &pacmanLoc);
+			strategy = new GhostMoveStrategyC(ghosts, &pacmanLoc, &board);
 		}
 		start();
 	}
@@ -173,7 +173,7 @@ void Game::start()
 						for (int i = 0; i < GHOSTS_COUNT; i++)
 						{
 							ghosts[i].setLastLocation(ghosts[i].getCurrLocation());
-							ghosts[i].ghostMoveDecider();
+							strategy->moveAlghorithm(ghosts[i]);
 							board.moveGhost(GHOSTS_COUNT, ghosts[i], pacman, COLORS);
 						}
 
@@ -214,7 +214,7 @@ void Game::start()
 				for (int i = 0; i < GHOSTS_COUNT; i++)
 				{
 					ghosts[i].setLastLocation(ghosts[i].getCurrLocation());
-					ghosts[i].ghostMoveDecider();
+					strategy->moveAlghorithm(ghosts[i]);
 					board.moveGhost(GHOSTS_COUNT, ghosts[i], pacman, COLORS);
 				}
 
@@ -224,27 +224,33 @@ void Game::start()
 			{
 				collision = caseCollisionPacman();
 			}
-			if (countPaces % 17) 
-			{
+			if (countPaces % 20 == 0) {
 				//the case that fruit appears on the board
 				fruitMode = true;
 				Location fruitLoc = randomLocation();
 				fruit = Fruit(fruitLoc);
+				fruit.setLastLocation(fruit.getCurrLocation());
 				fruit.move();
 				board.moveFruit(fruit, ghosts, GHOSTS_COUNT, pacman.getCurrLocation());
 
 
 			}
-			if (countPaces > 17 && countPaces % 12)
-			{
+			if (countPaces > 20 && countPaces % 16 == 0) {
 				//the case that fruit disapperas
 				fruitMode = false;
 				board.gotoxy(fruit.getCurrLocation());
-				cout << ' ';
+				cout << board.getSquareChar(fruit.getCurrLocation().getX(), fruit.getCurrLocation().getY());
 			}
+			if (fruit.getMeetGhost() || fruit.getMeetPacman()) {
+				fruitMode = false;
+			}
+
 			if (fruitMode) {
+				fruit.setLastLocation(fruit.getCurrLocation());
 				fruit.move();
 				board.moveFruit(fruit, ghosts, GHOSTS_COUNT, pacman.getCurrLocation());
+				Sleep(200);
+
 			}
 
 			ghostPace = !ghostPace;
@@ -257,14 +263,13 @@ void Game::start()
 
 }
 
-Location& Game::randomLocation()
-{
+Location& Game::randomLocation() {
 	srand(time(NULL));
-	int randomX = rand() % 21 + 1;
-	int randomY = rand() % 79 + 1;
+	int randomX = rand() % 20 + 1;
+	int randomY = rand() % 78 + 1;
 	while (board.getSquareChar(randomX, randomY) == '#') {
-		randomX = rand() % 21 + 1;
-		randomY = rand() % 79 + 1;
+		randomX = rand() % 20 + 1;
+		randomY = rand() % 78 + 1;
 	}
 	Location fruitLoc(randomX, randomY);
 	return fruitLoc;
@@ -358,4 +363,15 @@ void Game::caseCollisionGhosts()
 		}
 	}
 
+}
+
+void Game::openFile(string file_name)
+{
+	ifstream file;
+	file.open("file_name");
+	if (!file) {
+		cout << "Error with infile" << endl;
+		exit(-1);
+	}
+	board.setFile(&file);
 }
