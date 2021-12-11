@@ -15,6 +15,18 @@ Location& Location::operator=(const Location& other)
 	}
 	return *this;
 }
+bool Location::operator==(const Location& other)const {
+	if (x != other.x) {
+		return false;
+	}
+	else if (y != other.y) {
+		return false;
+	}
+	return true;
+}
+bool Location::operator!=(const Location& other)const {
+	return !(*this == other);
+}
 
 void Location::setX(int _x)
 {
@@ -36,16 +48,6 @@ int Location::getY()
 	return y;
 }
 
-bool Location::isEqual(Location other)
-{
-	bool ans = false;
-	if (x == other.getX()) {
-		if (y == other.getY()) {
-			ans = true;
-		}
-	}
-	return ans;
-}
 
 
 void Location::move(diraction _diraction)
@@ -90,6 +92,3 @@ void Location::moveRight()
 	setY(getY() + 1);
 	//else
 }
-
-
-

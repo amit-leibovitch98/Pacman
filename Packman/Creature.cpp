@@ -4,23 +4,31 @@ void Creature::setCurrLocation(Location _location)
 {
 	currLocation = _location;
 }
+Creature::Creature(const Creature& other) :initLocation(other.initLocation) {
+	currLocation = other.currLocation;
+	lastLocation = other.lastLocation;
+	currDiraction = other.currDiraction;
+	character = other.character;
+}
 
 Creature& Creature::operator=(const Creature& other)
 {
 	if (this != &other)
 	{
 		currLocation = other.currLocation;
+		lastLocation = other.lastLocation;
 		currDiraction = other.currDiraction;
+		character = other.character;
 	}
 	return *this;
 }
 
-Location Creature::getCurrLocation()
+Location& Creature::getCurrLocation()
 {
 	return currLocation;
 }
 
-Location Creature::getLastLocation() 
+Location Creature::getLastLocation()
 {
 	return lastLocation;
 }
@@ -35,7 +43,7 @@ Location Creature::getinitLocation() const
 	return initLocation;
 }
 
-char Creature::getCharacter()
+char& Creature::getCharacter()
 {
 	return character;
 }

@@ -126,8 +126,10 @@
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Creature.cpp" />
+    <ClCompile Include="Fruit.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Ghost.cpp" />
+    <ClCompile Include="GhostMoveStrategy.cpp" />
     <ClCompile Include="Location.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pacman.cpp" />
@@ -135,8 +137,10 @@
   <ItemGroup>
     <ClInclude Include="Board.h" />
     <ClInclude Include="Creature.h" />
+    <ClInclude Include="Fruit.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Ghost.h" />
+    <ClInclude Include="GhostMoveStrategy.h" />
     <ClInclude Include="Location.h" />
     <ClInclude Include="Pacman.h" />
   </ItemGroup>
