@@ -1,10 +1,10 @@
 #include "GhostMoveStrategy.h"
 
-void GhostMoveStrategyA::moveAlghorithm(Ghost& ghost) {
+void GhostMoveStrategyA::moveAlghorithm(Ghost& ghost) 
+{
 	BFS(getPacmanLocation(), 22, 80, ghost);
-
-
 }
+
 bool GhostMoveStrategyA::BFS(Location& s, int i, int j, Ghost& ghost) {
 	int** visited = new int* [22];
 	for (int j = 0; j < 22; j++) {

@@ -57,3 +57,10 @@ diraction Creature::getCurrDiraction()
 {
 	return currDiraction;
 }
+
+void Creature::initLocations(Location _location)
+{
+
+	initLocation = currLocation = lastLocation = _location;
+
+}

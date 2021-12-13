@@ -1,17 +1,39 @@
+#include <filesystem>
+#include <string>
+#include <set>
 #include "Game.h"
 
+namespace fs = std::filesystem;
 
-int main(int argc, char* argv[])
+bool suffixScreen(string file_name);
+
+int main()
 {
+	
 	cout << "If you want to play with colors enter 1, otherwise enter 0" << endl;
 	bool colors;
 	cin >> colors;
 	Game game(colors);
-	for (int i = 1; i < argc; i++)
+
+	string prefix = ".\\";
+	set<string> screen_files;
+	for (const auto& file : fs::directory_iterator("."))
+		if (suffixScreen(file.path().u8string()))
+			screen_files.insert(file.path().u8string());
+
+	for (set<string>::iterator i = screen_files.begin(); i != screen_files.end(); i++)
 	{
-		game.openFile(argv[i]);
-		game.run();
-		//close and delete file
+		string file_name = i->substr(prefix.length());
+
+		game.run(file_name);
+		game.closeFile();
 	}
 	return 0;
+}
+
+bool suffixScreen(string file_name)
+{
+	string suffix = ".screen";
+	return file_name.size() >= suffix.size() && 0 == file_name.compare(file_name.size() - suffix.size(), suffix.size(), suffix);
+
 }

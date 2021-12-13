@@ -2,7 +2,7 @@
 
 int Game::getGhostCount()
 {
-	return GHOSTS_COUNT;
+	return ghosts.size();
 }
 
 Pacman Game::getPacman()
@@ -83,10 +83,13 @@ void Game::printInstruction()
 	}
 }
 
-void Game::run()
+void Game::run(string file_name)
 {
 	bool exit = false;
 	int input;
+
+	board.openBoardFile(file_name);
+	board.fileToMatrix('$',pacman, ghosts);
 
 	printMenu();
 
@@ -102,9 +105,11 @@ void Game::run()
 		else if (input == 7)
 			printMenu();
 		cin >> input;
+
 	}
 
-	if (!exit) {
+	if (!exit) 
+	{
 		char level;
 		cout << "Please enter the following level: " << endl;
 		cout << "(a) BEST" << endl;
@@ -113,15 +118,17 @@ void Game::run()
 		cin >> level;
 		//CREATE HERE THE STRATEGY OF MOVING GHOSTS and pass it as parameter to game
 		//There is a problem about the ghost- its array and the strategy get it as pointer-not good.
+		board.printBoard(pacman, ghosts, COLORS);
 		Location pacmanLoc = pacman.getCurrLocation();
+
 		if (level == 'a') {
-			strategy = new GhostMoveStrategyA(ghosts, &pacmanLoc, &board);
+			strategy = new GhostMoveStrategyA(ghosts, pacmanLoc, &board);
 		}
 		else if (level == 'b') {
-			strategy = new GhostMoveStrategyB(ghosts, &pacmanLoc, &board);
+			strategy = new GhostMoveStrategyB(ghosts, pacmanLoc, &board);
 		}
 		else {
-			strategy = new GhostMoveStrategyC(ghosts, &pacmanLoc, &board);
+			strategy = new GhostMoveStrategyC(ghosts, pacmanLoc, &board);
 		}
 		start();
 	}
@@ -131,7 +138,7 @@ void Game::run()
 void Game::start()
 {
 
-	board.printBoard(pacman, ghosts, GHOSTS_COUNT, COLORS);
+	board.printBoard(pacman, ghosts, COLORS);
 	bool ghostPace = true;
 	bool collision = false;
 	char currStep = _getch();
@@ -149,7 +156,7 @@ void Game::start()
 			pacman.initPacmanLocation();
 			ghosts[0].initGhostLocation(0);
 			ghosts[1].initGhostLocation(1);
-			board.printBoard(pacman, ghosts, GHOSTS_COUNT, COLORS);
+			board.printBoard(pacman, ghosts, COLORS);
 			currStep = _getch();
 			_diraction = caster(currStep);
 			lastStep = _diraction;
@@ -170,11 +177,11 @@ void Game::start()
 					board.printPacman(pacman.getCharacter(), COLORS);
 					Sleep(150);
 					if (ghostPace == true) {
-						for (int i = 0; i < GHOSTS_COUNT; i++)
+						for (int i = 0; i < ghosts.size(); i++)
 						{
 							ghosts[i].setLastLocation(ghosts[i].getCurrLocation());
 							strategy->moveAlghorithm(ghosts[i]);
-							board.moveGhost(GHOSTS_COUNT, ghosts[i], pacman, COLORS);
+							board.moveGhost(ghosts[i], pacman, COLORS);
 						}
 
 					}
@@ -211,11 +218,11 @@ void Game::start()
 			board.movePacman(pacman, lastStep, COLORS);
 			collision = caseCollisionPacman();
 			if (ghostPace == true) {
-				for (int i = 0; i < GHOSTS_COUNT; i++)
+				for (int i = 0; i < ghosts.size(); i++)
 				{
 					ghosts[i].setLastLocation(ghosts[i].getCurrLocation());
 					strategy->moveAlghorithm(ghosts[i]);
-					board.moveGhost(GHOSTS_COUNT, ghosts[i], pacman, COLORS);
+					board.moveGhost(ghosts[i], pacman, COLORS);
 				}
 
 
@@ -231,7 +238,7 @@ void Game::start()
 				fruit = Fruit(fruitLoc);
 				fruit.setLastLocation(fruit.getCurrLocation());
 				fruit.move();
-				board.moveFruit(fruit, ghosts, GHOSTS_COUNT, pacman.getCurrLocation());
+				board.moveFruit(fruit, ghosts, pacman.getCurrLocation());
 
 
 			}
@@ -248,7 +255,7 @@ void Game::start()
 			if (fruitMode) {
 				fruit.setLastLocation(fruit.getCurrLocation());
 				fruit.move();
-				board.moveFruit(fruit, ghosts, GHOSTS_COUNT, pacman.getCurrLocation());
+				board.moveFruit(fruit, ghosts, pacman.getCurrLocation());
 				Sleep(200);
 
 			}
@@ -365,13 +372,7 @@ void Game::caseCollisionGhosts()
 
 }
 
-void Game::openFile(string file_name)
+void Game::closeFile()
 {
-	ifstream file;
-	file.open("file_name");
-	if (!file) {
-		cout << "Error with infile" << endl;
-		exit(-1);
-	}
-	board.setFile(&file);
+	board.getFile().close();
 }
