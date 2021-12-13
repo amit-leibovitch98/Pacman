@@ -3,7 +3,7 @@
 
 class Creature
 {
-private:
+protected:
 	Location currLocation;
 	Location lastLocation;
 	Location initLocation;
@@ -12,11 +12,11 @@ private:
 
 public:
 	Creature() = default;
-	Creature(Location _location, diraction currDiraction = RIGHT) :currLocation(_location), lastLocation(_location), initLocation(_location) {};
+	Creature(Location _location, diraction _currDiraction = RIGHT) : currDiraction(_currDiraction) {initLocations(_location); }
 	Creature(char _character, Location _initLocation, Location _lastLocation, Location _currLocation, diraction _currDiraction = RIGHT) :
-		currLocation(_currLocation), lastLocation(_lastLocation), initLocation(_initLocation), currDiraction(_currDiraction), character(_character) {};
-	Creature(char _character, Location _Location, diraction _currDiraction = RIGHT) :
-		currLocation(_Location), lastLocation(_Location), initLocation(_Location), currDiraction(_currDiraction), character(_character) {};
+		currDiraction(_currDiraction), character(_character) {}
+	Creature(char _character, Location _location, diraction _currDiraction = RIGHT) :
+		currDiraction(_currDiraction), character(_character) {initLocations(_location); }
 	Creature(const Creature& other);
 	Creature& operator=(const Creature& other);
 	void setCurrLocation(Location _location);
@@ -27,5 +27,5 @@ public:
 	char& getCharacter();
 	void setCurrDiraction(diraction _currDiraction);
 	diraction getCurrDiraction();
+	void initLocations(Location _location);
 };
-

@@ -1,6 +1,5 @@
 #include "Board.h"
 
-
 char Board::getEmptyspot()
 {
 	return empty_spot;
@@ -26,6 +25,22 @@ int Board::getBREADCRAMPS_NUM()
 	return BREADCRAMPS_NUM;
 }
 
+void Board::openBoardFile(string file_name)
+{
+	board_file.open(file_name);
+	if (!board_file) 
+	{
+		cout << "Error with infile" << endl;
+		exit(-1);
+	}
+}
+
+void Board::initBoard()
+{
+	setBoardWidth();
+	setBoardHight(); 
+}
+
 int Board::getScore()
 {
 	return score;
@@ -41,37 +56,91 @@ char& Board::getSquareChar(int x, int y)
 	return board[x][y];
 }
 
-void Board::setFile(ifstream* _board_file)
+ifstream Board::getFile()
 {
-	board_file = _board_file;
+	return ifstream();
+}
+
+void Board::setBoardWidth()
+{
+	board_file.seekg(0, ios::beg);
+	char* firstLine = new char[MAX_BOARD_WIDTH];
+	board_file >> firstLine;
+	actual_board_width = strlen(firstLine);
+}
+
+void Board::setBoardHight()
+{
+	board_file.seekg(0, ios::beg);
+	int ampersand_j;
+	string line;
+	actual_board_hight = 1;
+	char* curr_line = new char[MAX_BOARD_HIGHT];
+
+	board_file.getline(curr_line, sizeof(char) * (actual_board_width + 1));
+
+	ampersand_j = line.find('&');
+
+	while (ampersand_j == -1)
+	{
+		actual_board_hight++;
+		board_file.getline(curr_line, sizeof(char) * (actual_board_width + 1));
+
+		line = curr_line;
+		ampersand_j = line.find('&');
+	}
+
+	ampersand_loc.setX(actual_board_hight);
+	ampersand_loc.setY(ampersand_j);
+	board_file.seekg(2 * actual_board_width, ios::cur);
+	actual_board_hight += 3;
+	
+	board_file.getline(curr_line, sizeof(char) * (actual_board_width + 1));
+	line = curr_line;
+
+	while (line.find('#' || '$' || '@') != -1)
+	{
+		actual_board_hight++;
+		board_file.getline(curr_line, sizeof(char) * (actual_board_width + 1));
+	}
+	
+}
+
+int Board::getBoardWidth()
+{
+	return actual_board_width;
+}
+
+int Board::getBoardHight()
+{
+	return actual_board_hight;
 }
 
 //----------------------------------------------------------------------------------------------------------
 
-void Board::fileToMatrix()
+void Board::fileToMatrix(char ghost_character, Pacman pacman, vector<Ghost> ghosts)
 {
+
+	initBoard();
+	board_file.seekg(0, ios::beg);
 	char temp;
-	int i = 0;
-	while (!board_file->eof())
+
+	for (int i = 0; i < actual_board_width; i++)
 	{
-		temp = board_file->get();
-		if (temp == '/n')
+		for (int j = 0; j < actual_board_hight; j++)
 		{
-			i++;
-		}
-		else if (temp == data_start)
-		{
-			data_start_line = i;
-		}
-		else
-		{
+			temp = board_file.get();
 			board[i].push_back(temp);
+
+			if (temp == ghost_character)
+				ghosts.push_back({ { i,j } });
+			if (temp == '@')
+				pacman.initLocations({ i,j });
 		}
 	}
 
 
 }
-
 
 void Board::printGhost(char ghost_character, bool COLORS)
 {
@@ -97,12 +166,10 @@ void Board::printBoardEndLine(Pacman pacman, bool COLORS)
 		cout << "Lives: " << pacman.getLives() << "                                                   Score: " << score << endl;
 }
 
-void Board::printBoard(Pacman pacman, Ghost ghosts[], const int GHOST_COUNT, bool COLORS)
+void Board::printBoard(Pacman pacman, vector<Ghost> ghosts, bool COLORS)
 {
 	cout.flush();
 	system("cls");
-
-	int ghosts_counter = 0;
 
 	for (int i = 0; i < board.size(); i++)
 	{
@@ -117,9 +184,7 @@ void Board::printBoard(Pacman pacman, Ghost ghosts[], const int GHOST_COUNT, boo
 			}
 			else if (board[i][j] == '$')
 			{
-				printGhost(ghosts[ghosts_counter].getCharacter(), COLORS);
-				ghosts[ghosts_counter].setCurrLocation({ i,j });
-				ghosts_counter++;
+				printGhost(ghosts[0].getCharacter(), COLORS);
 			}
 			else if (board[i][j] == '%')
 				cout << empty_spot;
@@ -136,7 +201,7 @@ void Board::printBoard(Pacman pacman, Ghost ghosts[], const int GHOST_COUNT, boo
 
 //----------------------------------------------------------------------------------------------------------
 
-void Board::moveGhost(int ghost_count, Ghost& ghosts, Pacman pacman, bool COLORS)
+void Board::moveGhost(Ghost& ghosts, Pacman pacman, bool COLORS)
 {
 
 	gotoxy(ghosts.getLastLocation());
@@ -209,32 +274,38 @@ void Board::movePacman(Pacman& pacman, diraction _diraction, bool COLORS)
 
 	}
 
-	gotoxy((BOARD_WIDTH, BOARD_HIGHT));
+	gotoxy((MAX_BOARD_WIDTH, MAX_BOARD_HIGHT));
 	printBoardEndLine(pacman, COLORS);
 	Sleep(150);
 }
 
-void Board::moveFruit(Fruit& fruit, Ghost ghosts[], int arrSize, Location pacmanLocation) {
+void Board::moveFruit(Fruit& fruit, vector<Ghost> ghosts, Location pacmanLocation) 
+{
 	bool specialCases = false;
 	gotoxy(fruit.getLastLocation());
-	if (pacmanLocation == fruit.getCurrLocation()) {
+	if (pacmanLocation == fruit.getCurrLocation()) 
+	{
 		specialCases = true;
 		fruit.setMeetPacman(true);
 		cout << empty_spot;
 		score = score + fruit.getCharacter();
 	}
-	else if (getSquareChar(fruit.getCurrLocation().getX(), fruit.getCurrLocation().getY()) == wall_caracter) {
+	else if (getSquareChar(fruit.getCurrLocation().getX(), fruit.getCurrLocation().getY()) == wall_caracter) 
+	{
 		fruit.setCurrLocation(fruit.getLastLocation());
 
 
 	}
-	else if (getSquareChar(fruit.getCurrLocation().getX(), fruit.getCurrLocation().getY()) == magic_tunnel_character) {
+	else if (getSquareChar(fruit.getCurrLocation().getX(), fruit.getCurrLocation().getY()) == magic_tunnel_character) 
+	{
 		fruit.move();
 	}
 	else {
 		bool collision = false;
-		for (int i = 0; i < arrSize && !collision; i++) {
-			if (fruit.getCurrLocation() == ghosts[i].getCurrLocation()) {
+		for (int i = 0; i < ghosts.size() && !collision; i++) 
+		{
+			if (fruit.getCurrLocation() == ghosts[i].getCurrLocation()) 
+			{
 				specialCases = true;
 				collision = true;
 				fruit.setMeetGhost(true);
@@ -262,7 +333,7 @@ void Board::magicTunnelCase(Pacman& pacman)
 
 	if (y == 0)
 	{
-		newY = BOARD_WIDTH - 4;
+		newY = MAX_BOARD_WIDTH - 4;
 	}
 	else
 	{

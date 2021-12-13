@@ -10,11 +10,14 @@
 class Board
 {
 private:
-	const  int BOARD_WIDTH = 80;
-	const  int BOARD_HIGHT = 22;
+	const  int MAX_BOARD_WIDTH = 80;
+	const  int MAX_BOARD_HIGHT = 22;
+	int actual_board_width;
+	int actual_board_hight;
 	vector<vector<char>> board;
-	ifstream* board_file;
-	int data_start_line;
+	ifstream board_file;
+	Location ampersand_loc;
+
 
 	const char empty_spot = ' ';
 	int score;
@@ -23,10 +26,12 @@ private:
 	const char wall_caracter = 178;
 	const char magic_tunnel_character = 176; //177
 	const char data_start = '&';
+	
 
 
 public:
 	Board() :score(0), board({}) {};
+	void initBoard();
 	int getScore();
 	char getBreadcrampCharacter();
 	char getEmptyspot();
@@ -34,18 +39,24 @@ public:
 	char getMagicTunnelCharacter();
 	void setScore(int _score);
 	int getBREADCRAMPS_NUM();
+	void openBoardFile(string file_name);
 	char& getSquareChar(int x, int y);
-	void setFile(ifstream* _board_file);
+	ifstream getFile();
+	void setBoardWidth();
+	void setBoardHight();
+	int getBoardWidth();
+	int getBoardHight();
+
 	//----------------------------------------------------------------------------------------------
-	void fileToMatrix();
+	void fileToMatrix(char ghost_character, Pacman pacman, vector<Ghost> ghosts);
 	void printGhost(char ghost_character, bool COLORS);
 	void printPacman(char pacman_character, bool COLORS);
 	void printBoardEndLine(Pacman pacman, bool COLORS);
-	void printBoard(Pacman pacman, Ghost ghosts[], const int ghosts_count, bool COLORS);
+	void printBoard(Pacman pacman, vector<Ghost> ghosts, bool COLORS);
 	//----------------------------------------------------------------------------------------------
-	void moveGhost(int ghost_count, Ghost& ghosts, Pacman pacman, bool COLORS);
+	void moveGhost(Ghost& ghosts, Pacman pacman, bool COLORS);
 	void movePacman(Pacman& pacman, diraction _diraction, bool COLORS);
-	void moveFruit(Fruit& fruit, Ghost ghost[], int arrSize, Location pacmanLocation);
+	void moveFruit(Fruit& fruit, vector<Ghost> ghosts, Location pacmanLocation);
 	void magicTunnelCase(Pacman& pacman);
 	void gotoxy(Location location);
 
