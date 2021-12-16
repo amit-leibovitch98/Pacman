@@ -3,6 +3,7 @@
 #include "Pacman.h"
 #include "Ghost.h"
 #include "Fruit.h"
+#include <string>
 #include <fstream>
 #include <vector>
 #include <iostream>
@@ -14,7 +15,7 @@ private:
 	const  int MAX_BOARD_HIGHT = 22;
 	int actual_board_width;
 	int actual_board_hight;
-	vector<vector<char>> board;
+	vector<string> board;
 	ifstream board_file;
 	Location ampersand_loc;
 
@@ -48,11 +49,11 @@ public:
 	int getBoardHight();
 
 	//----------------------------------------------------------------------------------------------
-	void fileToMatrix(char ghost_character, Pacman pacman, vector<Ghost> ghosts);
-	void printGhost(char ghost_character, bool COLORS);
-	void printPacman(char pacman_character, bool COLORS);
+	void fileToMatrix(char ghost_character, Pacman &pacman, vector<Ghost> &ghosts);
+	void printGhost(Ghost ghost, bool COLORS);
+	void printPacman(Pacman pacman, bool COLORS);
 	void printBoardEndLine(Pacman pacman, bool COLORS);
-	void printBoard(Pacman pacman, vector<Ghost> ghosts, bool COLORS);
+	void printBoard(Pacman pacman, vector<Ghost> &ghosts, bool COLORS);
 	//----------------------------------------------------------------------------------------------
 	void moveGhost(Ghost& ghosts, Pacman pacman, bool COLORS);
 	void movePacman(Pacman& pacman, diraction _diraction, bool COLORS);

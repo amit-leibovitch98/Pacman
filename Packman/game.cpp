@@ -28,7 +28,8 @@ bool Game::getInProgress()
 void Game::printMenu()
 {
 	system("cls");
-	if (COLORS)
+
+	if(COLORS)
 	{
 		//"\x1B[31m       \033[0m\t\t"
 		cout << "\x1B[95mPlease enter the following option: \033[0m\t\t" << endl;
@@ -105,12 +106,12 @@ void Game::run(string file_name)
 		else if (input == 7)
 			printMenu();
 		cin >> input;
-
 	}
 
 	if (!exit) 
 	{
 		char level;
+		system("cls");
 		cout << "Please enter the following level: " << endl;
 		cout << "(a) BEST" << endl;
 		cout << "(b) GOOD" << endl;
@@ -121,10 +122,12 @@ void Game::run(string file_name)
 		board.printBoard(pacman, ghosts, COLORS);
 		Location pacmanLoc = pacman.getCurrLocation();
 
-		if (level == 'a') {
+		if (level == 'a') 
+		{
 			strategy = new GhostMoveStrategyA(ghosts, pacmanLoc, &board);
 		}
-		else if (level == 'b') {
+		else if (level == 'b') 
+		{
 			strategy = new GhostMoveStrategyB(ghosts, pacmanLoc, &board);
 		}
 		else {
@@ -174,7 +177,7 @@ void Game::start()
 			{
 				while (!_kbhit() && !collision) {
 					board.gotoxy(pacman.getCurrLocation());
-					board.printPacman(pacman.getCharacter(), COLORS);
+					board.printPacman(pacman, COLORS);
 					Sleep(150);
 					if (ghostPace == true) {
 						for (int i = 0; i < ghosts.size(); i++)

@@ -5,12 +5,11 @@
 
 namespace fs = std::filesystem;
 
-bool suffixScreen(string file_name);
-
 int main()
 {
 	
 	cout << "If you want to play with colors enter 1, otherwise enter 0" << endl;
+	bool suffixScreen(string file_name);
 	bool colors;
 	cin >> colors;
 	Game game(colors);
@@ -18,15 +17,20 @@ int main()
 	string prefix = ".\\";
 	set<string> screen_files;
 	for (const auto& file : fs::directory_iterator("."))
-		if (suffixScreen(file.path().u8string()))
-			screen_files.insert(file.path().u8string());
+		if (suffixScreen(file.path().string()))
+			screen_files.insert(file.path().string());
 
-	for (set<string>::iterator i = screen_files.begin(); i != screen_files.end(); i++)
+	if (screen_files.size() < 3)
+		cout << "There are not enough board files on diractory (less then 3)" << endl;
+	else
 	{
-		string file_name = i->substr(prefix.length());
+		for (set<string>::iterator i = screen_files.begin(); i != screen_files.end(); i++)
+		{
+			string file_name = i->substr(prefix.length());
 
-		game.run(file_name);
-		game.closeFile();
+			game.run(file_name);
+			game.closeFile();
+		}
 	}
 	return 0;
 }

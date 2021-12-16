@@ -43,7 +43,6 @@ void Pacman::move(diraction _diraction)
 	else if (_diraction == RIGHT)
 	{
 		getCurrLocation().moveRight();
-
 	}
 	else if (_diraction == UP)
 	{

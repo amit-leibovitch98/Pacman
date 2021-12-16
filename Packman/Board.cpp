@@ -63,14 +63,16 @@ ifstream Board::getFile()
 
 void Board::setBoardWidth()
 {
+	board_file.clear();
 	board_file.seekg(0, ios::beg);
 	char* firstLine = new char[MAX_BOARD_WIDTH];
-	board_file >> firstLine;
+	board_file.getline(firstLine, sizeof(char) * (MAX_BOARD_WIDTH + 1));
 	actual_board_width = strlen(firstLine);
 }
 
 void Board::setBoardHight()
 {
+	board_file.clear();
 	board_file.seekg(0, ios::beg);
 	int ampersand_j;
 	string line;
@@ -118,19 +120,24 @@ int Board::getBoardHight()
 
 //----------------------------------------------------------------------------------------------------------
 
-void Board::fileToMatrix(char ghost_character, Pacman pacman, vector<Ghost> ghosts)
+void Board::fileToMatrix(char ghost_character, Pacman &pacman, vector<Ghost> &ghosts)
 {
 
 	initBoard();
+	board_file.clear();
 	board_file.seekg(0, ios::beg);
+	char* line = new char[MAX_BOARD_WIDTH];
+	string sline;
 	char temp;
 
-	for (int i = 0; i < actual_board_width; i++)
+	for (int i = 0; i < actual_board_hight; i++)
 	{
-		for (int j = 0; j < actual_board_hight; j++)
+		board_file.getline(line, sizeof(char) * (actual_board_width + 1));
+		sline = line;
+		board.push_back(sline);
+		for (int j = 0; j < actual_board_width; j++)
 		{
-			temp = board_file.get();
-			board[i].push_back(temp);
+			temp = line[j];
 
 			if (temp == ghost_character)
 				ghosts.push_back({ { i,j } });
@@ -142,20 +149,30 @@ void Board::fileToMatrix(char ghost_character, Pacman pacman, vector<Ghost> ghos
 
 }
 
-void Board::printGhost(char ghost_character, bool COLORS)
+void Board::printGhost(Ghost ghost, bool COLORS)
 {
+	Location next_loc;
+
 	if (COLORS)
-		cout << "\033[3;104;97m" << ghost_character << "\033[0m\t\t";
+		cout << "\033[3;104;97m" << ghost.getCharacter() << "\033[0m\t\t";
 	else
-		cout << ghost_character;
+		cout << ghost.getCharacter();
+
+	next_loc = { ghost.getCurrLocation().getX() , ghost.getCurrLocation().getY() + 1 };
+	gotoxy(next_loc);
 }
 
-void Board::printPacman(char pacman_character, bool COLORS)
+void Board::printPacman(Pacman pacman, bool COLORS)
 {
+	Location next_loc;
+
 	if (COLORS)
-		cout << "\x1B[93m" << pacman_character << "\033[0m\t\t";
+		cout << "\x1B[93m" << pacman.getCharacter() << "\033[0m\t\t";
 	else
-		cout << pacman_character;
+		cout << pacman.getCharacter();
+
+	next_loc = { pacman.getCurrLocation().getX() , pacman.getCurrLocation().getY() + 1 };
+	gotoxy(next_loc);
 }
 
 void Board::printBoardEndLine(Pacman pacman, bool COLORS)
@@ -166,8 +183,9 @@ void Board::printBoardEndLine(Pacman pacman, bool COLORS)
 		cout << "Lives: " << pacman.getLives() << "                                                   Score: " << score << endl;
 }
 
-void Board::printBoard(Pacman pacman, vector<Ghost> ghosts, bool COLORS)
+void Board::printBoard(Pacman pacman, vector<Ghost> &ghosts, bool COLORS)
 {
+	int ghost_counter = 0;
 	cout.flush();
 	system("cls");
 
@@ -179,21 +197,26 @@ void Board::printBoard(Pacman pacman, vector<Ghost> ghosts, bool COLORS)
 				cout << wall_caracter;
 			else if (board[i][j] == '@')
 			{
-				printPacman(pacman.getCharacter(), COLORS);
-				pacman.setCurrLocation({ i,j }); //init!!
+				printPacman(pacman, COLORS);
 			}
 			else if (board[i][j] == '$')
 			{
-				printGhost(ghosts[0].getCharacter(), COLORS);
+				printGhost(ghosts[ghost_counter], COLORS);
+				ghost_counter++;
 			}
 			else if (board[i][j] == '%')
 				cout << empty_spot;
 			else if (board[i][j] == '&')
 				printBoardEndLine(pacman, COLORS);
 			else if (board[i][j] == ' ')
-				cout << breadcramp_character;
+			{
+				if (i == 0 || j == 0 || i == actual_board_hight-1 || j == actual_board_width-1)
+					cout << magic_tunnel_character;
+				else
+					cout << breadcramp_character;
+			}
 		}
-
+		cout << endl;
 	}
 
 
@@ -227,7 +250,7 @@ void Board::moveGhost(Ghost& ghosts, Pacman pacman, bool COLORS)
 	ghosts.setRunOverBreadcramp(board[x][y] == breadcramp_character); //if the ghost is supposed to run over a breadcramp, ghage the falg to true, alse to false
 
 	gotoxy(ghosts.getCurrLocation()); //print current location
-	printGhost(ghosts.getCharacter(), COLORS);
+	printGhost(ghosts, COLORS);
 }
 
 void Board::movePacman(Pacman& pacman, diraction _diraction, bool COLORS)
@@ -241,7 +264,7 @@ void Board::movePacman(Pacman& pacman, diraction _diraction, bool COLORS)
 		getSquareChar(pacman.getCurrLocation().getX(), pacman.getCurrLocation().getY()) = empty_spot;
 		cout << empty_spot;
 		gotoxy(pacman.getCurrLocation());
-		printPacman(pacman.getCharacter(), COLORS);
+		printPacman(pacman, COLORS);
 
 
 	}
@@ -250,14 +273,14 @@ void Board::movePacman(Pacman& pacman, diraction _diraction, bool COLORS)
 
 		pacman.setCurrLocation(pacman.getLastLocation());
 		gotoxy(pacman.getCurrLocation());
-		printPacman(pacman.getCharacter(), COLORS);
+		printPacman(pacman, COLORS);
 
 
 	}
 	else if (getSquareChar(pacman.getCurrLocation().getX(), pacman.getCurrLocation().getY()) == empty_spot)
 	{
 		gotoxy(pacman.getCurrLocation());
-		printPacman(pacman.getCharacter(), COLORS);
+		printPacman(pacman, COLORS);
 
 		gotoxy(pacman.getLastLocation());
 		cout << empty_spot;
@@ -270,7 +293,7 @@ void Board::movePacman(Pacman& pacman, diraction _diraction, bool COLORS)
 		magicTunnelCase(pacman);
 
 		gotoxy(pacman.getCurrLocation());
-		printPacman(pacman.getCharacter(), COLORS);
+		printPacman(pacman, COLORS);
 
 	}
 
