@@ -8,11 +8,13 @@
 #include <vector>
 #include <iostream>
 
+using namespace std;
+
 class Board
 {
 private:
-	const  int MAX_BOARD_WIDTH = 80;
-	const  int MAX_BOARD_HIGHT = 22;
+	const int MAX_BOARD_WIDTH = 80;
+	const int MAX_BOARD_HIGHT = 22;
 	int actual_board_width;
 	int actual_board_hight;
 	vector<string> board;
@@ -25,7 +27,7 @@ private:
 	int const BREADCRAMPS_NUM = 1064;
 	const char breadcramp_character = '.';
 	const char wall_caracter = 178;
-	const char magic_tunnel_character = 176; //177
+	const char magic_tunnel_character = 176;
 	const char data_start = '&';
 	
 

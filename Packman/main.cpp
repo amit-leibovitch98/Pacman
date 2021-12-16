@@ -7,9 +7,8 @@ namespace fs = std::filesystem;
 
 int main()
 {
-	
-	cout << "If you want to play with colors enter 1, otherwise enter 0" << endl;
 	bool suffixScreen(string file_name);
+	cout << "If you want to play with colors enter 1, otherwise enter 0" << endl;
 	bool colors;
 	cin >> colors;
 	Game game(colors);

@@ -1,120 +1,185 @@
 #include "GhostMoveStrategy.h"
 
-void GhostMoveStrategyA::moveAlghorithm(Ghost& ghost) 
+void GhostMoveStrategyA::moveAlghorithm(Ghost& ghost, int countPaces, int board_width, int board_hight)
 {
-	BFS(getPacmanLocation(), 22, 80, ghost);
+
+	BFS(getPacmanLocation(), board_hight, board_width, ghost);
 }
 
-bool GhostMoveStrategyA::BFS(Location& s, int i, int j, Ghost& ghost) {
-	int** visited = new int* [22];
-	for (int j = 0; j < 22; j++) {
-		visited[j] = new int[80];
-	}
-	for (int i = 0; i < 22; i++) {
-		for (int j = 0; j < 80; j++) {
-			if (getBoard()->getSquareChar(i, j) == '#' || getBoard()->getSquareChar(i, j) == '|') {
-				visited[i][j] = -1;
-			}
-			else {
-				visited[i][j] = 1;
-			}
-
-		}
-
-	}
-	//directions
-	int dir[4][2] = { {0,1}, {0,-1}, {1,0}, {-1,0} };
-	int countNeighbrhod = 0;
-	//queue
+void GhostMoveStrategy::BFS(Location& s, int i, int j, Ghost& ghost) 
+{
+	vector<vector<bool>> visited(i, vector<bool>(j, false));
+	int dir[4][2] = { { 0,1 }, { 0,-1 }, { 1,0 }, { -1,0 } };
+	Location adj, cell;
 	queue<Location> q;
-
-	//insert the top right corner.
 	q.push(s);
-	//until queue is empty
-	while (q.size() > 0)
-	{
-		Location p = q.front();
+	visited[s.getX()][s.getY()] = true;
+	while (!q.empty()) {
+		cell = q.front();
 		q.pop();
 
-		//mark as visited
-		visited[p.getX()][p.getY()] = -1;
-
-		//destination is reached.
-		if (Location::Location(p.getX() + 1, p.getY()) == ghost.getCurrLocation()) {
-			ghost.getCurrLocation() = p;
-			delete[]visited;
-			return true;
-		}
-		if (Location::Location(p.getX() - 1, p.getY()) == ghost.getCurrLocation()) {
-			ghost.getCurrLocation() = p;
-			delete[]visited;
-			return true;
-		}
-		if (Location::Location(p.getX(), p.getY() + 1) == ghost.getCurrLocation()) {
-			ghost.getCurrLocation() = p;
-			delete[]visited;
-			return true;
-		}
-		if (Location::Location(p.getX(), p.getY() - 1) == ghost.getCurrLocation()) {
-			ghost.getCurrLocation() = p;
-			delete[]visited;
-			return true;
-		}
-
-
-		//check all four directions
-		for (int i = 0; i < 4; i++)
-		{
-
-			//using the direction array
-			int a = p.getX() + dir[i][0];
-			int b = p.getY() + dir[i][1];
-
-			//not blocked and valid
-			if (visited[a][b] != -1 && a >= 0 && b >= 0
-				&& a < 22 && b < 80)
-			{
-
-				q.push(Location::Location(a, b));
-
-
+		for (int i = 0; i < 4; i++) {
+			int a = cell.getX() + dir[i][0];
+			int b = cell.getY() + dir[i][1];
+			adj.setX(a);
+			adj.setY(b);
+			if (adj == ghost.getCurrLocation()) {
+				ghost.setCurrLocation(cell);
+				return;
+			}
+			else if (visited[a][b] != true && a < i && b < j && a >= 0 && b >= 0) {
+				if (isValidSquare(a, b)) {
+					q.push(adj);
+					visited[adj.getX()][adj.getY()] = true;
+				}
 			}
 		}
-
 	}
-	delete[]visited;
-	return false;
+	return;
+
 }
 
-void GhostMoveStrategyB::moveAlghorithm(Ghost& ghost) {
-	//dont understand what is smart again after five moves.
+bool GhostMoveStrategy::isValidSquare(int x, int y) 
+{
+	if (board->getSquareChar(x, y) == '#' || board->getSquareChar(x, y) == '|')
+	{
+		return false;
+	}
+	return true;
 }
 
-void GhostMoveStrategyC::moveAlghorithm(Ghost& ghost) {
+void GhostMoveStrategyB::moveAlghorithm(Ghost& ghost, int countPaces, int board_width, int board_hight)
+{
 
-	srand(time(NULL));
-	int randomMove = rand() % 4 + 1;
-	if (randomMove == 1)
+	if (countPaces % 15 == 0) 
 	{
-		ghost.getCurrLocation().moveLeft();
-		ghost.setCurrDiraction(LEFT);
+		srand(time(NULL));
+		int randomMove = rand() % 4 + 1;
+		if (randomMove == 1)
+		{
+			ghost.getCurrLocation().moveLeft();
+			ghost.setCurrDiraction(LEFT);
+		}
+		else if (randomMove == 2)
+		{
+			ghost.getCurrLocation().moveRight();
+			ghost.setCurrDiraction(RIGHT);
+
+		}
+		else if (randomMove == 3)
+		{
+			ghost.getCurrLocation().moveUp();
+			ghost.setCurrDiraction(UP);
+		}
+		else
+		{
+			ghost.getCurrLocation().moveDown();
+			ghost.setCurrDiraction(DOWN);
+		}
 	}
-	else if (randomMove == 2)
+	else if (16 < countPaces && countPaces < 26)
 	{
-		ghost.getCurrLocation().moveRight();
-		ghost.setCurrDiraction(RIGHT);
+		if (ghost.getCurrDiraction() == LEFT)
+		{
+			ghost.getCurrLocation().moveLeft();
+			ghost.setCurrDiraction(LEFT);
+		}
+		else if (ghost.getCurrDiraction() == RIGHT)
+		{
+			ghost.getCurrLocation().moveRight();
+			ghost.setCurrDiraction(RIGHT);
+
+		}
+		else if (ghost.getCurrDiraction() == UP)
+		{
+			ghost.getCurrLocation().moveUp();
+			ghost.setCurrDiraction(UP);
+		}
+		else
+		{
+			ghost.getCurrLocation().moveDown();
+			ghost.setCurrDiraction(DOWN);
+		}
 
 	}
-	else if (randomMove == 3)
-	{
-		ghost.getCurrLocation().moveUp();
-		ghost.setCurrDiraction(UP);
+	else {
+		BFS(getPacmanLocation(), board_hight, board_width, ghost);
 	}
-	else
-	{
-		ghost.getCurrLocation().moveDown();
-		ghost.setCurrDiraction(DOWN);
+
+}
+
+void GhostMoveStrategyC::moveAlghorithm(Ghost& ghost, int countPaces, int board_width, int board_hight) {
+	if (countPaces % 20 == 1) {
+		srand(time(NULL));
+		int randomMove = rand() % 4 + 1;
+
+		if (randomMove == 1)
+		{
+			if (isValidSquare(ghost.getCurrLocation().getX(), ghost.getCurrLocation().getY() - 1)) {
+				ghost.getCurrLocation().moveLeft();
+				ghost.setCurrDiraction(LEFT);
+			}
+			else {
+				randomMove = rand() % 4 + 1;
+			}
+
+		}
+		else if (randomMove == 2)
+		{
+			if (isValidSquare(ghost.getCurrLocation().getX(), ghost.getCurrLocation().getY() + 1)) {
+				ghost.getCurrLocation().moveRight();
+				ghost.setCurrDiraction(RIGHT);
+			}
+			else {
+				randomMove = rand() % 4 + 1;
+			}
+
+		}
+		else if (randomMove == 3)
+		{
+			if (isValidSquare(ghost.getCurrLocation().getX() - 1, ghost.getCurrLocation().getY())) {
+				ghost.getCurrLocation().moveUp();
+				ghost.setCurrDiraction(UP);
+			}
+			else {
+				randomMove = rand() % 4 + 1;
+			}
+		}
+		else
+		{
+			if (isValidSquare(ghost.getCurrLocation().getX() + 1, ghost.getCurrLocation().getY())) {
+				ghost.getCurrLocation().moveDown();
+				ghost.setCurrDiraction(DOWN);
+			}
+			else {
+				randomMove = rand() % 4 + 1;
+			}
+		}
 	}
+	else {
+		if (ghost.getCurrDiraction() == LEFT)
+		{
+			ghost.getCurrLocation().moveLeft();
+			ghost.setCurrDiraction(LEFT);
+		}
+		else if (ghost.getCurrDiraction() == RIGHT)
+		{
+			ghost.getCurrLocation().moveRight();
+			ghost.setCurrDiraction(RIGHT);
+
+		}
+		else if (ghost.getCurrDiraction() == UP)
+		{
+			ghost.getCurrLocation().moveUp();
+			ghost.setCurrDiraction(UP);
+		}
+		else
+		{
+			ghost.getCurrLocation().moveDown();
+			ghost.setCurrDiraction(DOWN);
+		}
+	}
+
 
 
 }

@@ -27,7 +27,7 @@ bool Game::getInProgress()
 
 void Game::printMenu()
 {
-	system("cls");
+	//system("cls");
 
 	if(COLORS)
 	{
@@ -111,7 +111,7 @@ void Game::run(string file_name)
 	if (!exit) 
 	{
 		char level;
-		system("cls");
+		//system("cls");
 		cout << "Please enter the following level: " << endl;
 		cout << "(a) BEST" << endl;
 		cout << "(b) GOOD" << endl;
@@ -124,14 +124,14 @@ void Game::run(string file_name)
 
 		if (level == 'a') 
 		{
-			strategy = new GhostMoveStrategyA(ghosts, pacmanLoc, &board);
+			strategy = new GhostMoveStrategyA(pacmanLoc, &board);
 		}
 		else if (level == 'b') 
 		{
-			strategy = new GhostMoveStrategyB(ghosts, pacmanLoc, &board);
+			strategy = new GhostMoveStrategyB(pacmanLoc, &board);
 		}
 		else {
-			strategy = new GhostMoveStrategyC(ghosts, pacmanLoc, &board);
+			strategy = new GhostMoveStrategyC(pacmanLoc, &board);
 		}
 		start();
 	}
@@ -142,6 +142,7 @@ void Game::start()
 {
 
 	board.printBoard(pacman, ghosts, COLORS);
+
 	bool ghostPace = true;
 	bool collision = false;
 	char currStep = _getch();
@@ -153,6 +154,7 @@ void Game::start()
 
 	while (inProgress)
 	{
+		Sleep(150);
 		if (collision)
 		{
 			//if the pacman meet ghost
@@ -183,7 +185,7 @@ void Game::start()
 						for (int i = 0; i < ghosts.size(); i++)
 						{
 							ghosts[i].setLastLocation(ghosts[i].getCurrLocation());
-							strategy->moveAlghorithm(ghosts[i]);
+							strategy->moveAlghorithm(ghosts[i], countPaces, board.getBoardWidth(), board.getBoardHight());
 							board.moveGhost(ghosts[i], pacman, COLORS);
 						}
 
@@ -220,11 +222,13 @@ void Game::start()
 			pacman.move(lastStep);
 			board.movePacman(pacman, lastStep, COLORS);
 			collision = caseCollisionPacman();
-			if (ghostPace == true) {
+			if (ghostPace == true) 
+			{
 				for (int i = 0; i < ghosts.size(); i++)
 				{
+					strategy->getPacmanLocation() = pacman.getCurrLocation();
 					ghosts[i].setLastLocation(ghosts[i].getCurrLocation());
-					strategy->moveAlghorithm(ghosts[i]);
+					strategy->moveAlghorithm(ghosts[i], countPaces, board.getBoardWidth(), board.getBoardHight());
 					board.moveGhost(ghosts[i], pacman, COLORS);
 				}
 
@@ -267,6 +271,8 @@ void Game::start()
 			checkGameStatus();
 
 		}
+		if (countPaces == 25)
+			countPaces = 0;
 		countPaces++;
 	}
 

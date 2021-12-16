@@ -12,9 +12,6 @@
 #include "Board.h"
 #include "GhostMoveStrategy.h"
 
-
-
-
 using namespace std;
 
 class GhostMoveStrategy;

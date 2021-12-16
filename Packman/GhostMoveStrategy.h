@@ -1,33 +1,28 @@
 #pragma once
 #include "Ghost.h"
+#include <vector>
 #include <queue>
 #include "Board.h"
 
-
-class Ghost;
 class Location;
 class Board;
 
 //base class
-class GhostMoveStrategy 
-{
-	vector<Ghost> ghosts;
+class GhostMoveStrategy {
+protected:
+	Ghost* ghost;
 	Location pacmanLocation;
 	Board* board;
 public:
-	GhostMoveStrategy(vector<Ghost> _ghosts, Location pacmanLocation, Board* _board) :ghosts(_ghosts), pacmanLocation(pacmanLocation), board(_board) 
-	{
-		for (int i = 0; i < _ghosts.size(); i++)
-			ghosts[i] = _ghosts[i];
-	};
+	GhostMoveStrategy(Location pacmanLocation, Board* _board) :pacmanLocation(pacmanLocation), board(_board) {};
 	virtual ~GhostMoveStrategy() {};
-	virtual void moveAlghorithm(Ghost& ghost) = 0;
-
-	vector<Ghost> getGhost() 
+	virtual void moveAlghorithm(Ghost& ghost, int countPaces, int board_width, int board_hight) = 0;
+	virtual bool isValidSquare(int x, int y);
+	virtual void BFS(Location& s, int i, int j, Ghost& ghost);
+	Ghost* getGhost() 
 	{
-		return ghosts;
+		return ghost;
 	}
-
 	Location& getPacmanLocation() 
 	{
 		return pacmanLocation;
@@ -39,30 +34,27 @@ public:
 };
 
 //for best level
-class GhostMoveStrategyA : public GhostMoveStrategy 
-{
 
+class GhostMoveStrategyA : public GhostMoveStrategy {
 
 public:
-	GhostMoveStrategyA(vector<Ghost> ghosts, Location pacmanLocation, Board* _board) :GhostMoveStrategy(ghosts, pacmanLocation, _board) {};
-	void moveAlghorithm(Ghost& ghost);
-	bool BFS(Location& s, int i, int j, Ghost& ghost);
+	GhostMoveStrategyA(Location pacmanLocation, Board* _board) :GhostMoveStrategy(pacmanLocation, _board) {};
+	void moveAlghorithm(Ghost& ghost, int countPaces, int board_width, int board_hight);
+
 };
 
 //for good level
-class GhostMoveStrategyB : public GhostMoveStrategy 
-{
+class GhostMoveStrategyB : public GhostMoveStrategy {
 
 public:
-	GhostMoveStrategyB(vector<Ghost> ghosts, Location pacmanLocation, Board* _board) :GhostMoveStrategy(ghosts, pacmanLocation, _board) {};
-	void moveAlghorithm(Ghost& ghosts);
+	GhostMoveStrategyB(Location pacmanLocation, Board* _board) :GhostMoveStrategy(pacmanLocation, _board) {};
+	void moveAlghorithm(Ghost& ghost, int countPaces, int board_width, int board_hight);
 };
 
 //for novice level
-class GhostMoveStrategyC : public GhostMoveStrategy 
-{
+class GhostMoveStrategyC : public GhostMoveStrategy {
 
 public:
-	GhostMoveStrategyC(vector<Ghost> ghosts, Location pacmanLocation, Board* _board) :GhostMoveStrategy(ghosts, pacmanLocation, _board) {};
-	void moveAlghorithm(Ghost& ghost);
+	GhostMoveStrategyC (Location pacmanLocation, Board* _board) :GhostMoveStrategy(pacmanLocation, _board) {};
+	void moveAlghorithm(Ghost& ghost, int countPaces, int board_width, int board_hight);
 };
