@@ -2,13 +2,11 @@
 
 #include <iostream>
 #include <stdlib.h>
-#include <fstream>
 #include <stdio.h>
 #include <time.h> 
 #include <Windows.h>
 #include <conio.h>
 #include <vector>
-//#include <windows.h>
 #include "Board.h"
 #include "GhostMoveStrategy.h"
 
@@ -30,14 +28,14 @@ class Game
 	GhostMoveStrategy* strategy;
 
 public:
-	Game(bool colors) : COLORS(colors), pacman(), inProgress(true), fruit(Location::Location(1, 1)), strategy(nullptr) { ghosts.empty(); };
+	Game(bool colors) : COLORS(colors), pacman(), inProgress(true), fruit(Location::Location(1, 1)), strategy(nullptr), ghosts({}), board({}) {}
 	~Game() { delete strategy; };
 	Pacman getPacman();
 	void setPacman(Pacman _pacman);
 	int getGhostCount();
 	void setInProgress(bool _inProgress);
 	bool getInProgress();
-	Location& randomLocation();
+	void randomFruitLocation();
 	void run(string file_name);
 	void start();
 	void printInstruction();
@@ -46,6 +44,4 @@ public:
 	bool caseCollisionPacman();
 	diraction caster(char ch);
 	void checkGameStatus();
-	void closeFile();
-
 };

@@ -4,7 +4,8 @@
 #include <stdio.h>
 #include "Creature.h"
 
-class Fruit :public Creature {
+class Fruit :public Creature 
+{
 	bool meetGhost = false;
 	bool meetPacman = false;
 public:

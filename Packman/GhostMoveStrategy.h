@@ -19,11 +19,11 @@ public:
 	virtual void moveAlghorithm(Ghost& ghost, int countPaces, int board_width, int board_hight) = 0;
 	virtual bool isValidSquare(int x, int y);
 	virtual void BFS(Location& s, int i, int j, Ghost& ghost);
-	Ghost* getGhost() 
+	Ghost* getGhost()
 	{
 		return ghost;
 	}
-	Location& getPacmanLocation() 
+	Location& getPacmanLocation()
 	{
 		return pacmanLocation;
 	}
@@ -55,6 +55,6 @@ public:
 class GhostMoveStrategyC : public GhostMoveStrategy {
 
 public:
-	GhostMoveStrategyC (Location pacmanLocation, Board* _board) :GhostMoveStrategy(pacmanLocation, _board) {};
+	GhostMoveStrategyC(Location pacmanLocation, Board* _board) :GhostMoveStrategy(pacmanLocation, _board) {};
 	void moveAlghorithm(Ghost& ghost, int countPaces, int board_width, int board_hight);
 };
