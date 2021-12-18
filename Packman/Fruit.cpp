@@ -1,15 +1,15 @@
 #include "Fruit.h"
 
-Fruit::Fruit(Location _location, int _character) :Creature(_character, _location) {
+Fruit::Fruit(Location _location, int _character) :Creature(_character, _location) 
+{
 	//the char of the fruit
 	srand(time(NULL));
 	int randomDigit = rand() % 5 + 53;
 	getCharacter() = randomDigit;
+	}
 
-
-}
-
-void Fruit::move() {
+void Fruit::move() 
+{
 	//ganarate random number for the position of the fruit:
 	// 1 for left, 2 for right, 3 for up, 4 for down
 	srand(time(NULL));

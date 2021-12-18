@@ -28,7 +28,6 @@ int main()
 			string file_name = i->substr(prefix.length());
 
 			game.run(file_name);
-			game.closeFile();
 		}
 	}
 	return 0;

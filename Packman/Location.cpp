@@ -92,3 +92,5 @@ void Location::moveRight()
 	setY(getY() + 1);
 	//else
 }
+
+

@@ -29,7 +29,7 @@ void Game::printMenu()
 {
 	system("cls");
 
-	if(COLORS)
+	if (COLORS)
 	{
 		//"\x1B[31m       \033[0m\t\t"
 		cout << "\x1B[95mPlease enter the following option: \033[0m\t\t" << endl;
@@ -88,29 +88,39 @@ void Game::printInstruction()
 
 void Game::run(string file_name)
 {
-	bool exit = false;
+	bool exit_game = false;
 	int input;
 
-	board.openBoardFile(file_name);
-	board.fileToMatrix('$',pacman, ghosts);
+	ifstream board_file;
+	board_file.open(file_name);
+
+	if (!board_file)
+	{
+		cout << "Error with infile" << endl;
+		exit(-1);
+	}
+
+	board.fileToMatrix(board_file, '$', pacman, ghosts);
+
+	board_file.close();
 
 	printMenu();
 
 	cin >> input;
 
-	while (input != 1 && !exit)
+	while (input != 1 && !exit_game)
 	{
 		system("cls");
 		if (input == 8)
 			printInstruction();
 		else if (input == 9)
-			exit = true;
+			exit_game = true;
 		else if (input == 7)
 			printMenu();
 		cin >> input;
 	}
 
-	if (!exit) 
+	if (!exit_game)
 	{
 		char level;
 		system("cls");
@@ -124,11 +134,11 @@ void Game::run(string file_name)
 		board.printBoard(pacman, ghosts, COLORS);
 		Location pacmanLoc = pacman.getCurrLocation();
 
-		if (level == 'a') 
+		if (level == 'a')
 		{
 			strategy = new GhostMoveStrategyA(pacmanLoc, &board);
 		}
-		else if (level == 'b') 
+		else if (level == 'b')
 		{
 			strategy = new GhostMoveStrategyB(pacmanLoc, &board);
 		}
@@ -142,15 +152,14 @@ void Game::run(string file_name)
 
 void Game::start()
 {
+	int till_fruit_appear = 0;
+	int fruit_pace = 0;
 	bool ghostPace = true;
 	bool collision = false;
 	char currStep = _getch();
 	Location lastLocationGhost;
 	Location lastLocationPacman;
-
 	diraction _diraction = caster(currStep);
-	lastStep = _diraction;
-
 	pacman.setCurrDiraction(_diraction);
 
 	while (inProgress)
@@ -172,28 +181,29 @@ void Game::start()
 		{
 			currStep = _getch();
 			_diraction = caster(currStep);
+			pacman.setCurrDiraction(_diraction);
 			if (_diraction != ESC && _diraction != ERR && _diraction != STAY)
 			{
 				lastStep = _diraction;
 			}
 			else if (_diraction == STAY)
 			{
-				while (!_kbhit() && !collision) {
+				while (!_kbhit() && !collision) 
+				{
 					board.gotoxy(pacman.getCurrLocation());
 					board.printPacman(pacman, COLORS);
 					Sleep(150);
-					if (ghostPace == true) {
+					if (ghostPace == true) 
+					{
 						for (int i = 0; i < ghosts.size(); i++)
 						{
+							strategy->getPacmanLocation() = pacman.getCurrLocation();
 							ghosts[i].setLastLocation(ghosts[i].getCurrLocation());
 							strategy->moveAlghorithm(ghosts[i], countPaces, board.getBoardWidth(), board.getBoardHight());
 							board.moveGhost(ghosts[i], pacman, COLORS);
 						}
-
 					}
-
 					collision = caseCollisionPacman();
-
 					ghostPace = !ghostPace;
 				}
 				if (!collision)
@@ -213,7 +223,6 @@ void Game::start()
 				board.gotoxy((80, 23));
 				cout << "                                         ";
 			}
-
 		}
 
 		if (!collision)
@@ -221,9 +230,9 @@ void Game::start()
 			//the game continue regullary
 			pacman.setLastLocation(pacman.getCurrLocation());
 			pacman.move();
-			board.movePacman(pacman, lastStep, COLORS);
+			board.movePacman(pacman, COLORS);
 			collision = caseCollisionPacman();
-			if (ghostPace == true) 
+			if (ghostPace == true)
 			{
 				for (int i = 0; i < ghosts.size(); i++)
 				{
@@ -232,65 +241,61 @@ void Game::start()
 					strategy->moveAlghorithm(ghosts[i], countPaces, board.getBoardWidth(), board.getBoardHight());
 					board.moveGhost(ghosts[i], pacman, COLORS);
 				}
-
-
+				fruit_pace++;
 			}
 			if (!collision)
 			{
 				collision = caseCollisionPacman();
 			}
-			if (countPaces % 20 == 0) {
+			if (till_fruit_appear == 20)
+			{
 				//the case that fruit appears on the board
 				fruitMode = true;
-				Location fruitLoc = randomLocation();
-				fruit = Fruit(fruitLoc);
+				randomFruitLocation();
+				board.moveFruit(fruit, ghosts, pacman.getCurrLocation(), COLORS);
+			}
+			if (fruitMode && ghostPace)
+			{
 				fruit.setLastLocation(fruit.getCurrLocation());
 				fruit.move();
-				board.moveFruit(fruit, ghosts, pacman.getCurrLocation());
-
-
+				board.moveFruit(fruit, ghosts, pacman.getCurrLocation(), COLORS);
+				//Sleep(200);
 			}
-			if (countPaces > 20 && countPaces % 16 == 0) {
+			if (till_fruit_appear > 20 && fruit_pace % 5 == 0)
+			{
 				//the case that fruit disapperas
 				fruitMode = false;
 				board.gotoxy(fruit.getCurrLocation());
 				cout << board.getSquareChar(fruit.getCurrLocation().getX(), fruit.getCurrLocation().getY());
+				fruit_pace = 0;
+				till_fruit_appear = 0;
 			}
-			if (fruit.getMeetGhost() || fruit.getMeetPacman()) {
+			if (fruit.getMeetGhost() || fruit.getMeetPacman()) 
 				fruitMode = false;
-			}
-
-			if (fruitMode) {
-				fruit.setLastLocation(fruit.getCurrLocation());
-				fruit.move();
-				board.moveFruit(fruit, ghosts, pacman.getCurrLocation());
-				Sleep(200);
-
-			}
 
 			ghostPace = !ghostPace;
 			checkGameStatus();
-
 		}
+
 		if (countPaces == 25)
 			countPaces = 0;
 		countPaces++;
+
+		till_fruit_appear++;
 	}
-
-
 }
 
-Location& Game::randomLocation() {
+void Game::randomFruitLocation() 
+{
 	srand(time(NULL));
-	int randomX = rand() % 20 + 1;
-	int randomY = rand() % 78 + 1;
-	while (board.getSquareChar(randomX, randomY) == '#') {
-		randomX = rand() % 20 + 1;
-		randomY = rand() % 78 + 1;
+	int randomX = rand() % board.getBoardHight();
+	int randomY = rand() % board.getBoardWidth();
+	while (board.getSquareChar(randomX, randomY) == '#' || board.getSquareChar(randomX, randomY) == '|' )
+	{
+		randomX = rand() % board.getBoardHight();
+		randomY = rand() % board.getBoardWidth();
 	}
-	Location fruitLoc(randomX, randomY);
-	return fruitLoc;
-
+	fruit.initLocations({ randomX, randomY });
 }
 
 bool Game::caseCollisionPacman()
@@ -306,20 +311,20 @@ bool Game::caseCollisionPacman()
 
 void Game::checkGameStatus()
 {
-	cout.flush();
-	system("cls");
-
 	if (board.getScore() == board.getBREADCRAMPS_NUM())
 	{
+		cout.flush();
+		system("cls");
 		cout << "You Win :)" << endl;
 		inProgress = false;
 	}
 	else if (pacman.getLives() == 0)
 	{
+		cout.flush();
+		system("cls");
 		cout << "You Lose :(" << endl;
 		inProgress = false;
 	}
-
 }
 
 diraction Game::caster(char ch)
@@ -377,9 +382,4 @@ void Game::caseCollisionGhosts()
 		}
 	}
 
-}
-
-void Game::closeFile()
-{
-	board.getFile().close();
 }
