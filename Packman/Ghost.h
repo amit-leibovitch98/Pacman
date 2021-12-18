@@ -11,10 +11,9 @@ private:
 
 public:
 	Ghost(Location _location, bool _run_over_breadcramp = false) :
-		Creature(234, _location), run_over_breadcramp(_run_over_breadcramp) {};
+		Creature('$', _location), run_over_breadcramp(_run_over_breadcramp) {};
 	Ghost(const Ghost& other);
 	Ghost& operator=(const Ghost& other);
-	void initGhostLocation(int i);
 	void ghostMoveDecider();
 	bool getRunOverBreadcramp();
 	void setRunOverBreadcramp(bool _run_over_breadcramp);

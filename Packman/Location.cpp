@@ -1,6 +1,5 @@
 #include "Location.h"
 
-
 Location::Location(const Location& other)
 {
 	x = other.x;
@@ -15,7 +14,9 @@ Location& Location::operator=(const Location& other)
 	}
 	return *this;
 }
-bool Location::operator==(const Location& other)const {
+
+bool Location::operator==(const Location& other)const
+{
 	if (x != other.x) {
 		return false;
 	}
@@ -24,7 +25,9 @@ bool Location::operator==(const Location& other)const {
 	}
 	return true;
 }
-bool Location::operator!=(const Location& other)const {
+
+bool Location::operator!=(const Location& other)const 
+{
 	return !(*this == other);
 }
 
@@ -47,8 +50,6 @@ int Location::getY()
 {
 	return y;
 }
-
-
 
 void Location::move(diraction _diraction)
 {
@@ -92,5 +93,3 @@ void Location::moveRight()
 	setY(getY() + 1);
 	//else
 }
-
-

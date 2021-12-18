@@ -2,15 +2,16 @@
 
 #include <iostream>
 #include <stdlib.h>
+#include <filesystem>
 #include <stdio.h>
 #include <time.h> 
-#include <Windows.h>
 #include <conio.h>
-#include <vector>
+#include <windows.h>
 #include "Board.h"
 #include "GhostMoveStrategy.h"
 
 using namespace std;
+namespace fs = std::filesystem;
 
 class GhostMoveStrategy;
 
@@ -23,23 +24,27 @@ class Game
 	Fruit fruit;
 	bool inProgress;
 	bool fruitMode = false;
-	diraction lastStep;
 	int countPaces = 1;
 	GhostMoveStrategy* strategy;
 
 public:
 	Game(bool colors) : COLORS(colors), pacman(), inProgress(true), fruit(Location::Location(1, 1)), strategy(nullptr), ghosts({}), board({}) {}
 	~Game() { delete strategy; };
+
+	bool endswith(string file_name);
+	vector<string> loadFiles();
+
 	Pacman getPacman();
 	void setPacman(Pacman _pacman);
 	int getGhostCount();
 	void setInProgress(bool _inProgress);
 	bool getInProgress();
-	void randomFruitLocation();
-	void run(string file_name);
+	Location& randomLocation();
+	void run(string file_name, int input);
 	void start();
 	void printInstruction();
 	void printMenu();
+	void printLevels(bool COLORS);
 	void caseCollisionGhosts();
 	bool caseCollisionPacman();
 	diraction caster(char ch);

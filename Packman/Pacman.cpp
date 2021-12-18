@@ -14,8 +14,10 @@ Pacman& Pacman::operator=(const Pacman& other)
 	}
 	return *this;
 }
-void Pacman::initPacmanLocation() {
-	getCurrLocation() = Location::Location(11, 40);
+void Pacman::initPacmanLocation() 
+{
+	lastLocation = currLocation;
+	currLocation = initLocation;
 }
 
 void Pacman::setLives(int _lives)
@@ -43,6 +45,7 @@ void Pacman::move()
 	else if (currDiraction == RIGHT)
 	{
 		getCurrLocation().moveRight();
+
 	}
 	else if (currDiraction == UP)
 	{

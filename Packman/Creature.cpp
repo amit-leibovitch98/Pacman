@@ -4,7 +4,9 @@ void Creature::setCurrLocation(Location _location)
 {
 	currLocation = _location;
 }
-Creature::Creature(const Creature& other) :initLocation(other.initLocation) {
+
+Creature::Creature(const Creature& other) :initLocation(other.initLocation) 
+{
 	currLocation = other.currLocation;
 	lastLocation = other.lastLocation;
 	currDiraction = other.currDiraction;

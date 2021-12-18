@@ -47,19 +47,6 @@ void Ghost::ghostMoveDecider()
 
 }
 
-void Ghost::initGhostLocation(int i) {
-	if (i == 0) {
-		Location location(10, 1);
-		setCurrLocation(location);
-		setLastLocation(location);
-	}
-	else {
-		Location location(7, 39);
-		setCurrLocation(location);
-		setLastLocation(location);
-	}
-}
-
 bool Ghost::getRunOverBreadcramp()
 {
 	return run_over_breadcramp;

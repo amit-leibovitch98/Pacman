@@ -25,8 +25,8 @@ private:
 	int score;
 	int const BREADCRAMPS_NUM = 1064;
 	const char breadcramp_character = '.';
-	const char wall_caracter = 178;
-	const char magic_tunnel_character = 176;
+	const char wall_caracter = '#';
+	const char magic_tunnel_character = '|';
 	const char data_start = '&';
 
 
@@ -41,6 +41,7 @@ public:
 	char getMagicTunnelCharacter();
 	void setScore(int _score);
 	int getBREADCRAMPS_NUM();
+	Location getAmpersandLocation();
 	char& getSquareChar(int x, int y);
 	void setBoardWidth(ifstream& board_file);
 	void setBoardHight(ifstream& board_file);
@@ -54,6 +55,7 @@ public:
 	void printFruit(Fruit fruit, bool COLORS);
 	void printBoardEndLine(Pacman pacman, bool COLORS);
 	void printBoard(Pacman pacman, vector<Ghost>& ghosts, bool COLORS);
+	void clearScreen();
 	//----------------------------------------------------------------------------------------------
 	void moveGhost(Ghost& ghosts, Pacman pacman, bool COLORS);
 	void movePacman(Pacman& pacman, bool COLORS);
