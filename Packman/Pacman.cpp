@@ -33,18 +33,18 @@ void Pacman::liveDedaction()
 	setLives(getLives() - 1);
 }
 
-void Pacman::move(diraction _diraction)
+void Pacman::move()
 {
 
-	if (_diraction == LEFT)
+	if (currDiraction == LEFT)
 	{
 		getCurrLocation().moveLeft();
 	}
-	else if (_diraction == RIGHT)
+	else if (currDiraction == RIGHT)
 	{
 		getCurrLocation().moveRight();
 	}
-	else if (_diraction == UP)
+	else if (currDiraction == UP)
 	{
 		getCurrLocation().moveUp();
 	}

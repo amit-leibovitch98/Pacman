@@ -293,11 +293,8 @@ void Board::movePacman(Pacman& pacman, diraction _diraction, bool COLORS)
 	}
 	else if (getSquareChar(pacman.getCurrLocation().getX(), pacman.getCurrLocation().getY()) == ' ')
 	{
-		gotoxy(pacman.getCurrLocation());
+		cout << ' ';
 		printPacman(pacman, COLORS);
-
-		gotoxy(pacman.getLastLocation());
-		cout << empty_spot;
 	}
 	else if (getSquareChar(pacman.getCurrLocation().getX(), pacman.getCurrLocation().getY()) == '|')
 	{
@@ -311,7 +308,7 @@ void Board::movePacman(Pacman& pacman, diraction _diraction, bool COLORS)
 
 	}
 
-	gotoxy((MAX_BOARD_WIDTH, MAX_BOARD_HIGHT));
+	gotoxy(ampersand_loc);
 	printBoardEndLine(pacman, COLORS);
 	Sleep(150);
 }

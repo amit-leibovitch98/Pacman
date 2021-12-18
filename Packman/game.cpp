@@ -27,7 +27,7 @@ bool Game::getInProgress()
 
 void Game::printMenu()
 {
-	//system("cls");
+	system("cls");
 
 	if(COLORS)
 	{
@@ -48,6 +48,8 @@ void Game::printMenu()
 
 void Game::printInstruction()
 {
+	system("cls");
+
 	if (COLORS)
 	{
 		cout << "\n" << endl;
@@ -111,7 +113,7 @@ void Game::run(string file_name)
 	if (!exit) 
 	{
 		char level;
-		//system("cls");
+		system("cls");
 		cout << "Please enter the following level: " << endl;
 		cout << "(a) BEST" << endl;
 		cout << "(b) GOOD" << endl;
@@ -140,9 +142,6 @@ void Game::run(string file_name)
 
 void Game::start()
 {
-
-	board.printBoard(pacman, ghosts, COLORS);
-
 	bool ghostPace = true;
 	bool collision = false;
 	char currStep = _getch();
@@ -151,6 +150,8 @@ void Game::start()
 
 	diraction _diraction = caster(currStep);
 	lastStep = _diraction;
+
+	pacman.setCurrDiraction(_diraction);
 
 	while (inProgress)
 	{
@@ -219,7 +220,7 @@ void Game::start()
 		{
 			//the game continue regullary
 			pacman.setLastLocation(pacman.getCurrLocation());
-			pacman.move(lastStep);
+			pacman.move();
 			board.movePacman(pacman, lastStep, COLORS);
 			collision = caseCollisionPacman();
 			if (ghostPace == true) 
@@ -305,21 +306,18 @@ bool Game::caseCollisionPacman()
 
 void Game::checkGameStatus()
 {
+	cout.flush();
+	system("cls");
 
 	if (board.getScore() == board.getBREADCRAMPS_NUM())
 	{
-		cout.flush();
-		system("cls");
 		cout << "You Win :)" << endl;
 		inProgress = false;
 	}
 	else if (pacman.getLives() == 0)
 	{
-		cout.flush();
-		system("cls");
 		cout << "You Lose :(" << endl;
 		inProgress = false;
-
 	}
 
 }

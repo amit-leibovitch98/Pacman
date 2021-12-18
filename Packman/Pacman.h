@@ -14,6 +14,6 @@ public:
 	void initPacmanLocation();
 	int getLives();
 	void liveDedaction();
-	void move(diraction _diraction);
+	void move();
 
 };

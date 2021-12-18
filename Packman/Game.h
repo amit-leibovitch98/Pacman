@@ -4,11 +4,11 @@
 #include <stdlib.h>
 #include <fstream>
 #include <stdio.h>
-#include <string>
 #include <time.h> 
+#include <Windows.h>
 #include <conio.h>
 #include <vector>
-#include <windows.h>
+//#include <windows.h>
 #include "Board.h"
 #include "GhostMoveStrategy.h"
 
