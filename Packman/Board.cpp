@@ -241,14 +241,6 @@ void Board::printBoard(Pacman pacman, vector<Ghost>& ghosts, bool COLORS)
 	}
 }
 
-void Board::clearScreen()
-{
-	for (int i = 0; i < 30; i++)
-		for (int j = 0; j < 90; j++)
-			cout << "    ";
-	gotoxy({ 0,0 });
-}
-
 //----------------------------------------------------------------------------------------------------------
 
 void Board::moveGhost(Ghost& ghosts, Pacman pacman, bool COLORS)
