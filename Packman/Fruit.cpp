@@ -8,7 +8,7 @@ Fruit::Fruit(Location _location, int _character) :Creature(_character, _location
 	getCharacter() = randomDigit;
 }
 
-void Fruit::move() 
+void Fruit::move()
 {
 	//ganarate random number for the position of the fruit:
 		// 1 for left, 2 for right, 3 for up, 4 for down
@@ -38,22 +38,22 @@ void Fruit::move()
 	}
 }
 
-void Fruit::setMeetGhost(bool ans) 
+void Fruit::setMeetGhost(bool ans)
 {
 	meetGhost = ans;
 }
 
-void Fruit::setMeetPacman(bool ans) 
+void Fruit::setMeetPacman(bool ans)
 {
 	meetPacman = ans;
 }
 
-bool Fruit::getMeetGhost() 
+bool Fruit::getMeetGhost()
 {
 	return meetGhost;
 }
 
-bool Fruit::getMeetPacman() 
+bool Fruit::getMeetPacman()
 {
 	return meetPacman;
 }

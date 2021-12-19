@@ -28,7 +28,7 @@ class Game
 	GhostMoveStrategy* strategy;
 
 public:
-	Game(bool colors) : COLORS(colors), pacman(), inProgress(true), fruit(Location::Location(1, 1)), strategy(nullptr), ghosts({}), board({}) {}
+	Game(bool colors) : COLORS(colors), pacman(), inProgress(true), fruit(Location::Location(1, 1)), strategy(nullptr), ghosts({}), board() {}
 	~Game() { delete strategy; };
 
 	bool endswith(string file_name);

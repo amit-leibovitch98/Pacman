@@ -1,33 +1,38 @@
 #include "GhostMoveStrategy.h"
 
-void GhostMoveStrategyA::moveAlghorithm(Ghost& ghost, int countPaces) 
+void GhostMoveStrategyA::moveAlghorithm(Ghost& ghost, int countPaces)
 {
 	BFS(pacmanLocation, board->getBoardHight(), board->getBoardWidth(), ghost);
 }
 
-void GhostMoveStrategy::BFS(Location& s, int i, int j, Ghost& ghost) 
+void GhostMoveStrategy::BFS(Location& s, int i, int j, Ghost& ghost)
 {
-	vector<vector<bool>> visited(22, vector<bool>(80, false));
+	vector<vector<bool>> visited(i, vector<bool>(j, false));
 	int dir[4][2] = { { 0,1 }, { 0,-1 }, { 1,0 }, { -1,0 } };
 	Location adj, cell;
 	queue<Location> q;
 	q.push(s);
 	visited[s.getX()][s.getY()] = true;
-	while (!q.empty()) {
+	while (!q.empty()) 
+	{
 		cell = q.front();
 		q.pop();
 
-		for (int i = 0; i < 4; i++) {
-			int a = cell.getX() + dir[i][0];
-			int b = cell.getY() + dir[i][1];
+		for (int k = 0; k < 4; k++) 
+		{
+			int a = cell.getX() + dir[k][0];
+			int b = cell.getY() + dir[k][1];
 			adj.setX(a);
 			adj.setY(b);
-			if (adj == ghost.getCurrLocation()) {
-				ghost.setCurrLocation(cell);
+			if (adj == ghost.getCurrLocation()) 
+			{
+				ghost.setCurrLocation(cell); 
 				return;
 			}
-			else if (visited[a][b] != true && a < 22 && b < 80 && a >= 0 && b >= 0) {
-				if (isValidSquare(a, b)) {
+			else if (visited[a][b] != true && a < board->getBoardHight() && b < board->getBoardWidth() && a >= 0 && b >= 0)
+			{
+				if (isValidSquare(a, b)) 
+				{
 					q.push(adj);
 					visited[adj.getX()][adj.getY()] = true;
 				}
@@ -40,13 +45,13 @@ void GhostMoveStrategy::BFS(Location& s, int i, int j, Ghost& ghost)
 
 bool GhostMoveStrategy::isValidSquare(int x, int y)
 {
-	if (board->getSquareChar(x, y) == '#' || board->getSquareChar(x, y) == '|') {
+	if (board->getBoard()[x][y] == '#' || board->getBoard()[x][y] == '|') {
 		return false;
 	}
 	return true;
 }
 
-void GhostMoveStrategyB::moveAlghorithm(Ghost& ghost, int countPaces) 
+void GhostMoveStrategyB::moveAlghorithm(Ghost& ghost, int countPaces)
 {
 
 	if (countPaces % 15 == 0) {
@@ -98,7 +103,7 @@ void GhostMoveStrategyB::moveAlghorithm(Ghost& ghost, int countPaces)
 		}
 
 	}
-	else 
+	else
 	{
 		BFS(getPacmanLocation(), board->getBoardHight(), board->getBoardWidth(), ghost);
 	}
@@ -107,7 +112,7 @@ void GhostMoveStrategyB::moveAlghorithm(Ghost& ghost, int countPaces)
 
 void GhostMoveStrategyC::moveAlghorithm(Ghost& ghost, int countPaces)
 {
-	if (countPaces % 20 == 1) 
+	if (countPaces % 20 == 1)
 	{
 		srand(time(NULL));
 		int randomMove = rand() % 4 + 1;
@@ -138,7 +143,7 @@ void GhostMoveStrategyC::moveAlghorithm(Ghost& ghost, int countPaces)
 		}
 		else if (randomMove == 3)
 		{
-			if (isValidSquare(ghost.getCurrLocation().getX() - 1, ghost.getCurrLocation().getY())) 
+			if (isValidSquare(ghost.getCurrLocation().getX() - 1, ghost.getCurrLocation().getY()))
 			{
 				ghost.getCurrLocation().moveUp();
 				ghost.setCurrDiraction(UP);
@@ -149,7 +154,7 @@ void GhostMoveStrategyC::moveAlghorithm(Ghost& ghost, int countPaces)
 		}
 		else
 		{
-			if (isValidSquare(ghost.getCurrLocation().getX() + 1, ghost.getCurrLocation().getY())) 
+			if (isValidSquare(ghost.getCurrLocation().getX() + 1, ghost.getCurrLocation().getY()))
 			{
 				ghost.getCurrLocation().moveDown();
 				ghost.setCurrDiraction(DOWN);

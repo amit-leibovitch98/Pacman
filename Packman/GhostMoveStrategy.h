@@ -9,14 +9,14 @@ class Location;
 class Board;
 
 //base class
-class GhostMoveStrategy 
+class GhostMoveStrategy
 {
 protected:
 	vector<Ghost> ghosts;
 	Location pacmanLocation;
 	Board* board;
 public:
-	GhostMoveStrategy(vector<Ghost> _ghosts, Location pacmanLocation, Board* _board) :ghosts(_ghosts), pacmanLocation(pacmanLocation), board(_board) 
+	GhostMoveStrategy(vector<Ghost> _ghosts, Location pacmanLocation, Board* _board) :ghosts(_ghosts), pacmanLocation(pacmanLocation), board(_board)
 	{
 		for (int i = 0; i < _ghosts.size(); i++)
 			_ghosts.push_back(ghosts[i]);
@@ -37,7 +37,7 @@ public:
 };
 
 //for best level
-class GhostMoveStrategyA : public GhostMoveStrategy 
+class GhostMoveStrategyA : public GhostMoveStrategy
 {
 
 public:
@@ -47,7 +47,7 @@ public:
 };
 
 //for good level
-class GhostMoveStrategyB : public GhostMoveStrategy 
+class GhostMoveStrategyB : public GhostMoveStrategy
 {
 
 public:
@@ -56,7 +56,7 @@ public:
 };
 
 //for novice level
-class GhostMoveStrategyC : public GhostMoveStrategy 
+class GhostMoveStrategyC : public GhostMoveStrategy
 {
 
 public:

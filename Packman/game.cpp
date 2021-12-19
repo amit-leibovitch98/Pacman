@@ -16,7 +16,7 @@ vector<string> Game::loadFiles()
 		if (endswith(file.path().string()))
 			screen_files.push_back(file.path().string());
 
-	
+
 	if (screen_files.size() < 3)
 		cout << "There are not enough board files on diractory (less then 3)" << endl;
 	else
@@ -57,14 +57,14 @@ bool Game::getInProgress()
 
 void Game::printMenu()
 {
-	board.clearScreen();
+	system("cls");
 	if (COLORS)
 	{
 		//"\x1B[31m       \033[0m\t\t"
 		cout << "\x1B[95mPlease enter the following option: \033[0m\t\t" << endl;
 		cout << "\x1B[92m(1) Start a new game\033[0m\t\t" << endl;
-		cout << "\x1B[92m(2) Run only first board\033[0m\t\t" << endl;
-		cout << "\x1B[94m(8) Present instructions and keys\033[0m\t\t" << endl;
+		cout << "\x1B[93m(2) Run only one board\033[0m\t\t" << endl;
+		cout << "\x1B[96m(8) Present instructions and keys\033[0m\t\t" << endl;
 		cout << "\x1B[91m(9) EXIT\033[0m\t\t" << endl;
 	}
 	else
@@ -78,7 +78,7 @@ void Game::printMenu()
 
 void Game::printInstruction()
 {
-	 board.clearScreen();
+	system("cls");
 
 	if (COLORS)
 	{
@@ -118,13 +118,13 @@ void Game::printInstruction()
 
 void Game::printLevels(bool COLORS)
 {
-	 board.clearScreen();
+	system("cls");
 
 	if (COLORS)
 	{
 		cout << "\x1B[95mPlease enter the following level: \033[0m\t\t" << endl;
 		cout << "\x1B[92m(a) BEST\033[0m\t\t" << endl;
-		cout << "\x1B[94m(a) BEST\033[0m\t\t" << endl;
+		cout << "\x1B[94m(b) BEST\033[0m\t\t" << endl;
 		cout << "\x1B[91m(c) NOVICE\033[0m\t\t" << endl;
 	}
 	else
@@ -134,7 +134,7 @@ void Game::printLevels(bool COLORS)
 		cout << "(b) GOOD" << endl;
 		cout << "(c) NOVICE" << endl;
 	}
-	
+
 }
 
 void Game::run(string file_name, int input)
@@ -154,7 +154,7 @@ void Game::run(string file_name, int input)
 
 	board_file.close();
 
-	while (input != 1 && input != 2 &&!exit_game)
+	while (input != 1 && input != 2 && !exit_game)
 	{
 		if (input == 8)
 			printInstruction();
@@ -202,11 +202,15 @@ void Game::start()
 
 	while (inProgress)
 	{
-		Sleep(150);
+
 		if (collision)
 		{
 			//if the pacman meet ghost
-			pacman.initPacmanLocation();
+			pacman.initLocations(pacman.getinitLocation());
+			for (int i = 0; i < ghosts.size(); i++) {
+				ghosts[i].initLocations(ghosts[i].getinitLocation());
+			}
+			board.printBoard(pacman, ghosts, COLORS);
 			currStep = _getch();
 			_diraction = caster(currStep);
 			collision = false;
@@ -302,7 +306,7 @@ void Game::start()
 				//the case that fruit disapperas
 				fruitMode = false;
 				board.gotoxy(fruit.getCurrLocation());
-				cout << board.getSquareChar(fruit.getCurrLocation().getX(), fruit.getCurrLocation().getY());
+				cout << board.getBoard()[fruit.getCurrLocation().getX()][fruit.getCurrLocation().getY()];
 				fruit_pace = 0;
 				till_fruit_appear = 0;
 			}
@@ -321,16 +325,22 @@ void Game::start()
 	}
 }
 
-Location& Game::randomLocation() 
+Location& Game::randomLocation()
 {
-	srand(time(NULL));
-	int randomX = rand() % 20 + 1;
-	int randomY = rand() % 78 + 1;
-	while ((board.getSquareChar(randomX, randomY) == '#' || board.getSquareChar(randomX, randomY) == '|') && randomX > 21 && randomY > 79) {
-		randomX = rand() % 20 + 1;
-		randomY = rand() % 78 + 1;
+
+	int randomX = rand() % (board.getBoardHight() - 2) + 1;
+	int randomY = rand() % (board.getBoardWidth() - 2) + 1;
+
+	while (board.outOfRange(randomX, randomY) && (board.getBoard()[randomX][randomY] == '#' || board.getBoard()[randomX][randomY] == '|')) 
+	{
+		randomX = rand() % (board.getBoardHight() - 2) + 1;
+		randomY = rand() % (board.getBoardWidth() - 2) + 1;
 	}
+
 	Location fruitLoc(randomX, randomY);
+	fruit.setCurrLocation(fruitLoc);
+	int randomDigit = rand() % 5 + 53;
+	fruit.getCharacter() = randomDigit;
 	return fruitLoc;
 
 }
@@ -351,16 +361,20 @@ void Game::checkGameStatus()
 	if (board.getScore() == board.getBREADCRAMPS_NUM())
 	{
 		cout.flush();
-		 board.clearScreen();
+		system("cls");
 		cout << "You Win :)" << endl;
 		inProgress = false;
+		cout << "To continue press any key" << endl;
+		_getch();
 	}
 	else if (pacman.getLives() == 0)
 	{
 		cout.flush();
-		 board.clearScreen();
+		system("cls");
 		cout << "You Lose :(" << endl;
 		inProgress = false;
+		cout << "To continue press any key" << endl;
+		_getch();
 	}
 }
 

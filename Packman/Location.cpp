@@ -26,7 +26,7 @@ bool Location::operator==(const Location& other)const
 	return true;
 }
 
-bool Location::operator!=(const Location& other)const 
+bool Location::operator!=(const Location& other)const
 {
 	return !(*this == other);
 }

@@ -42,25 +42,28 @@ public:
 	void setScore(int _score);
 	int getBREADCRAMPS_NUM();
 	Location getAmpersandLocation();
-	char& getSquareChar(int x, int y);
 	void setBoardWidth(ifstream& board_file);
 	void setBoardHight(ifstream& board_file);
 	int getBoardWidth();
 	int getBoardHight();
+	vector<string>& getBoard() {
+		return board;
+	}
 
 	//----------------------------------------------------------------------------------------------
-	void fileToMatrix(ifstream &board_file, char ghost_character, Pacman& pacman, vector<Ghost>& ghosts);
+	void fileToMatrix(ifstream& board_file, char ghost_character, Pacman& pacman, vector<Ghost>& ghosts);
 	void printGhost(Ghost ghost, bool COLORS);
 	void printPacman(Pacman pacman, bool COLORS);
 	void printFruit(Fruit fruit, bool COLORS);
 	void printBoardEndLine(Pacman pacman, bool COLORS);
 	void printBoard(Pacman pacman, vector<Ghost>& ghosts, bool COLORS);
-	void clearScreen();
+	//void clearScreen();
 	//----------------------------------------------------------------------------------------------
 	void moveGhost(Ghost& ghosts, Pacman pacman, bool COLORS);
 	void movePacman(Pacman& pacman, bool COLORS);
 	void moveFruit(Fruit& fruit, vector<Ghost> ghosts, Location pacmanLocation, bool COLORS);
 	void magicTunnelCase(Pacman& pacman);
+	bool outOfRange(int x, int y);
 	void gotoxy(Location location);
 
 };

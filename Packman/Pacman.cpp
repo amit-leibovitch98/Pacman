@@ -14,7 +14,7 @@ Pacman& Pacman::operator=(const Pacman& other)
 	}
 	return *this;
 }
-void Pacman::initPacmanLocation() 
+void Pacman::initPacmanLocation()
 {
 	lastLocation = currLocation;
 	currLocation = initLocation;

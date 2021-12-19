@@ -12,11 +12,13 @@ protected:
 
 public:
 	Creature() = default;
-	Creature(Location _location, diraction _currDiraction = RIGHT) : currDiraction(_currDiraction) {initLocations(_location); }
+	Creature(Location _location, diraction _currDiraction = RIGHT) : currDiraction(_currDiraction) { initLocations(_location); }
 	Creature(char _character, Location _initLocation, Location _lastLocation, Location _currLocation, diraction _currDiraction = RIGHT) :
 		currDiraction(_currDiraction), character(_character) {}
 	Creature(char _character, Location _location, diraction _currDiraction = RIGHT) :
-		currDiraction(_currDiraction), character(_character) {initLocations(_location); }
+		currDiraction(_currDiraction), character(_character) {
+		initLocations(_location);
+	}
 	Creature(const Creature& other);
 	Creature& operator=(const Creature& other);
 	void setCurrLocation(Location _location);
