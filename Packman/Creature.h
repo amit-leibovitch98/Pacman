@@ -9,6 +9,7 @@ protected:
 	Location initLocation;
 	diraction currDiraction;
 	char character;
+	int howManySteps = 0;
 
 public:
 	Creature() = default;
@@ -30,4 +31,11 @@ public:
 	void setCurrDiraction(diraction _currDiraction);
 	diraction getCurrDiraction();
 	void initLocations(Location _location);
+	int getHowManySteps() {
+		return howManySteps;
+	}
+	void setHowManySteps(int many) {
+		howManySteps = many;
+	}
+	virtual void move()=0;
 };

@@ -197,43 +197,46 @@ void Board::printBoardEndLine(Pacman pacman, bool COLORS)
 
 void Board::printBoard(Pacman pacman, vector<Ghost>& ghosts, bool COLORS)
 {
-	int ghost_counter = 0;
-	cout.flush();
-	system("cls");
+	if (kindOfGame != 3) {
+		int ghost_counter = 0;
+		cout.flush();
+		system("cls");
 
-	for (int i = 0; i < board.size(); i++)
-	{
-		for (int j = 0; j < board[i].size(); j++)
+		for (int i = 0; i < board.size(); i++)
 		{
-			if (board[i][j] == '#')
-				cout << (char)178;
-			else if (board[i][j] == '%')
-				cout << empty_spot;
-			else if (board[i][j] == '&')
+			for (int j = 0; j < board[i].size(); j++)
 			{
-				printBoardEndLine(pacman, COLORS);
-				i += 3;
-			}
-			else if (board[i][j] == '|')
-			{
-				cout << (char)176;
+				if (board[i][j] == '#')
+					cout << (char)178;
+				else if (board[i][j] == '%')
+					cout << empty_spot;
+				else if (board[i][j] == '&')
+				{
+					printBoardEndLine(pacman, COLORS);
+					i += 3;
+				}
+				else if (board[i][j] == '|')
+				{
+					cout << (char)176;
 
+				}
+				else if (board[i][j] == ' ')
+					cout << ' ';
+				else if (board[i][j] == '.')
+					cout << '.';
 			}
-			else if (board[i][j] == ' ')
-				cout << ' ';
-			else if (board[i][j] == '.')
-				cout << '.';
+			cout << endl;
 		}
-		cout << endl;
-	}
-	gotoxy(pacman.getinitLocation());
-	printPacman(pacman, COLORS);
+		gotoxy(pacman.getinitLocation());
+		printPacman(pacman, COLORS);
 
-	for (int i = 0; i < ghosts.size(); i++)
-	{
-		gotoxy(ghosts[i].getinitLocation());
-		printGhost(ghosts[i], COLORS);
+		for (int i = 0; i < ghosts.size(); i++)
+		{
+			gotoxy(ghosts[i].getinitLocation());
+			printGhost(ghosts[i], COLORS);
+		}
 	}
+	
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -245,7 +248,11 @@ void Board::moveGhost(Ghost& ghosts, Pacman pacman, bool COLORS)
 
 	if (board[ghosts.getCurrLocation().getX()][ghosts.getCurrLocation().getY()] == breadcramp_character)
 	{
-		cout << breadcramp_character;
+		if (kindOfGame != 3) {
+			//its not silent mode
+			cout << breadcramp_character;
+		}
+		
 	}
 	else if (board[ghosts.getCurrLocation().getX()][ghosts.getCurrLocation().getY()] == wall_caracter)
 	{
@@ -259,7 +266,11 @@ void Board::moveGhost(Ghost& ghosts, Pacman pacman, bool COLORS)
 
 	else if (board[ghosts.getCurrLocation().getX()][ghosts.getCurrLocation().getY()] == empty_spot)
 	{
-		cout << empty_spot;
+		if (kindOfGame != 3) {
+			//its not silent mode
+			cout << empty_spot;
+		}
+		
 	}
 
 	int y = ghosts.getCurrLocation().getY();
@@ -268,7 +279,11 @@ void Board::moveGhost(Ghost& ghosts, Pacman pacman, bool COLORS)
 	ghosts.setRunOverBreadcramp(board[x][y] == breadcramp_character); //if the ghost is supposed to run over a breadcramp, ghage the falg to true, alse to false
 
 	gotoxy(ghosts.getCurrLocation()); //print current location
-	printGhost(ghosts, COLORS);
+	if (kindOfGame != 3) {
+		//its not silent mode
+		printGhost(ghosts, COLORS);
+	}
+	
 }
 
 void Board::movePacman(Pacman& pacman, bool COLORS)
@@ -280,10 +295,12 @@ void Board::movePacman(Pacman& pacman, bool COLORS)
 	{
 		score++;
 		board[pacman.getCurrLocation().getX()][pacman.getCurrLocation().getY()] = empty_spot;
-		cout << empty_spot;
-		gotoxy(pacman.getCurrLocation());
-		printPacman(pacman, COLORS);
-
+		if (kindOfGame != 3) {
+			//its not silent mode
+			cout << empty_spot;
+			gotoxy(pacman.getCurrLocation());
+			printPacman(pacman, COLORS);
+		}
 
 	}
 	else if (board[pacman.getCurrLocation().getX()][pacman.getCurrLocation().getY()] == wall_caracter)
@@ -291,33 +308,42 @@ void Board::movePacman(Pacman& pacman, bool COLORS)
 
 		pacman.setCurrLocation(pacman.getLastLocation());
 		gotoxy(pacman.getCurrLocation());
-		printPacman(pacman, COLORS);
-
+		if (kindOfGame != 3) {
+			printPacman(pacman, COLORS);
+		}
 
 	}
 	else if (board[pacman.getCurrLocation().getX()][pacman.getCurrLocation().getY()] == empty_spot)
 	{
-		gotoxy(pacman.getCurrLocation());
-		printPacman(pacman, COLORS);
+		if (kindOfGame != 3) {
+			gotoxy(pacman.getCurrLocation());
+			printPacman(pacman, COLORS);
 
-		gotoxy(pacman.getLastLocation());
-		cout << empty_spot;
+			gotoxy(pacman.getLastLocation());
+			cout << empty_spot;
+		}
 	}
 	else if (board[pacman.getCurrLocation().getX()][pacman.getCurrLocation().getY()] == magic_tunnel_character)
 	{
 		gotoxy(pacman.getLastLocation());
-		cout << empty_spot;
-
+		if (kindOfGame != 3) {
+			cout << empty_spot;
+		}
 		magicTunnelCase(pacman);
 
 		gotoxy(pacman.getCurrLocation());
-		printPacman(pacman, COLORS);
+		if (kindOfGame != 3) {
+			printPacman(pacman, COLORS);
+		}
+		
 
 	}
-
-	gotoxy(ampersand_loc);
-	printBoardEndLine(pacman, COLORS);
-	Sleep(100);
+	if (kindOfGame != 3) {
+		gotoxy(ampersand_loc);
+		printBoardEndLine(pacman, COLORS);
+		Sleep(100);
+	}
+	
 }
 
 void Board::moveFruit(Fruit& fruit, vector<Ghost> ghosts, Location pacmanLocation, bool COLORS)
@@ -329,7 +355,9 @@ void Board::moveFruit(Fruit& fruit, vector<Ghost> ghosts, Location pacmanLocatio
 	{
 		specialCases = true;
 		fruit.setMeetPacman(true);
-		cout << empty_spot;
+		if (kindOfGame != 3) {
+			cout << empty_spot;
+		}
 		score = score + (fruit.getCharacter() - '0');
 	}
 	else if (board[fruit.getCurrLocation().getX()][fruit.getCurrLocation().getY()] == wall_caracter)
@@ -349,16 +377,21 @@ void Board::moveFruit(Fruit& fruit, vector<Ghost> ghosts, Location pacmanLocatio
 				specialCases = true;
 				collision = true;
 				fruit.setMeetGhost(true);
-				cout << empty_spot;
-				cout << ghosts[i].getCharacter();
+				if (kindOfGame != 3) {
+					cout << empty_spot;
+				}
+				
+
 			}
 		}
 	}
 	if (!specialCases)
 	{
-		cout << board[fruit.getLastLocation().getX()][fruit.getLastLocation().getY()];
-		gotoxy(fruit.getCurrLocation());
-		printFruit(fruit, COLORS);
+		if (kindOfGame != 3) {
+			cout << board[fruit.getLastLocation().getX()][fruit.getLastLocation().getY()];
+			gotoxy(fruit.getCurrLocation());
+			printFruit(fruit, COLORS);
+		}
 	}
 }
 
@@ -389,7 +422,7 @@ void Board::magicTunnelCase(Pacman& pacman)
 
 bool Board::outOfRange(int x, int y)
 {
-	return (y == ampersand_loc.getY() || y == ampersand_loc.getY() + 1 || y == ampersand_loc.getY() + 2 || y > actual_board_hight - 5 || x > actual_board_width - 1);
+	return (x == ampersand_loc.getX() || x == ampersand_loc.getX() + 1 || x == ampersand_loc.getX() + 2 || x > actual_board_hight - 5 || y > actual_board_width - 1);
 }
 
 void Board::gotoxy(Location location)

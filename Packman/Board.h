@@ -20,7 +20,7 @@ private:
 	int actual_board_hight;
 	vector<string> board;
 	Location ampersand_loc;
-
+	int kindOfGame;
 	const char empty_spot = ' ';
 	int score;
 	int const BREADCRAMPS_NUM = 1064;
@@ -32,7 +32,7 @@ private:
 
 
 public:
-	Board() :score(0), board({}) {};
+	Board(int _kindOfGame) :score(0), board({}),kindOfGame(_kindOfGame) {};
 	void initBoard(ifstream& board_file);
 	int getScore();
 	char getBreadcrampCharacter();

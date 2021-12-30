@@ -55,9 +55,10 @@ bool Game::getInProgress()
 	return inProgress;
 }
 
-void Game::printMenu()
+int Game::printMenu()
 {
 	system("cls");
+	int input;
 	if (COLORS)
 	{
 		//"\x1B[31m       \033[0m\t\t"
@@ -71,9 +72,13 @@ void Game::printMenu()
 	{
 		cout << "Please enter the following option: " << endl;
 		cout << "(1) Start a new game" << endl;
+		cout << "(2) Run only one board" << endl;
 		cout << "(8) Present instructions and keys" << endl;
 		cout << "(9) EXIT" << endl;
+
 	}
+	cin >> input;
+	return input;
 }
 
 void Game::printInstruction()
@@ -136,6 +141,25 @@ void Game::printLevels(bool COLORS)
 	}
 
 }
+void Game::choseBoard(vector<string> screen_file) {
+	system("cls");
+	char input;
+	cout << "Please chose the following board: " << endl;
+	cout << "(a) pacman_a" << endl;
+	cout << "(b) pacman_b" << endl;
+	cout << "(c) pacman_c" << endl;
+	cin >> input;
+	if (input == 'a') {
+		run(screen_file[0], 2);
+	}
+	else if (input == 'b') {
+		run(screen_file[1], 2);
+	}
+	else if (input == 'c') {
+		run(screen_file[2], 2);
+	}
+
+}
 
 void Game::run(string file_name, int input)
 {
@@ -164,24 +188,28 @@ void Game::run(string file_name, int input)
 			printMenu();
 		cin >> input;
 	}
+	
 
 	if (!exit_game)
 	{
-		char level;
-		printLevels(COLORS);
-		cin >> level;
-		//CREATE HERE THE STRATEGY OF MOVING GHOSTS and pass it as parameter to game
-		Location pacmanLoc = pacman.getCurrLocation();
-		if (level == 'a') {
+		if (!res) {
+			char level;
+			printLevels(COLORS);
+			cin >> level;
+			//CREATE HERE THE STRATEGY OF MOVING GHOSTS and pass it as parameter to game
+			Location pacmanLoc = pacman.getCurrLocation();
+			if (level == 'a') {
 
-			strategy = new GhostMoveStrategyA(pacmanLoc, &board);
+				strategy = new GhostMoveStrategyA(pacmanLoc, &board);
+			}
+			else if (level == 'b') {
+				strategy = new GhostMoveStrategyB(pacmanLoc, &board);
+			}
+			else {
+				strategy = new GhostMoveStrategyC(pacmanLoc, &board);
+			}
 		}
-		else if (level == 'b') {
-			strategy = new GhostMoveStrategyB(pacmanLoc, &board);
-		}
-		else {
-			strategy = new GhostMoveStrategyC(pacmanLoc, &board);
-		}
+		
 		board.printBoard(pacman, ghosts, COLORS);
 		start();
 	}
@@ -325,16 +353,18 @@ void Game::start()
 	}
 }
 
+
+
 Location& Game::randomLocation()
 {
 
-	int randomX = rand() % (board.getBoardHight() - 2) + 1;
-	int randomY = rand() % (board.getBoardWidth() - 2) + 1;
+	int randomX = rand() % (board.getBoardHight() - 5) + 1;
+	int randomY = rand() % (board.getBoardWidth() - 5) + 1;
 
-	while (board.outOfRange(randomX, randomY) && (board.getBoard()[randomX][randomY] == '#' || board.getBoard()[randomX][randomY] == '|')) 
+	while (board.outOfRange(randomX, randomY) || (board.getBoard()[randomX][randomY] == '#' || board.getBoard()[randomX][randomY] == '|')) 
 	{
-		randomX = rand() % (board.getBoardHight() - 2) + 1;
-		randomY = rand() % (board.getBoardWidth() - 2) + 1;
+		randomX = rand() % (board.getBoardHight() - 5) + 1;
+		randomY = rand() % (board.getBoardWidth() - 5) + 1;
 	}
 
 	Location fruitLoc(randomX, randomY);
@@ -348,11 +378,13 @@ Location& Game::randomLocation()
 bool Game::caseCollisionPacman()
 {
 	bool ans = false;
-	if (pacman.getCurrLocation() == (ghosts[0].getCurrLocation()) ||
-		pacman.getCurrLocation() == (ghosts[1].getCurrLocation())) {
-		ans = true;
-		pacman.liveDedaction();
+	for (int i = 0; i < ghosts.size() && !ans; i++) {
+		if (pacman.getCurrLocation() == (ghosts[i].getCurrLocation())) {
+			ans = true;
+			pacman.liveDedaction();
+		}
 	}
+
 	return ans;
 }
 
@@ -366,15 +398,30 @@ void Game::checkGameStatus()
 		inProgress = false;
 		cout << "To continue press any key" << endl;
 		_getch();
+		system("cls");
 	}
 	else if (pacman.getLives() == 0)
 	{
 		cout.flush();
 		system("cls");
 		cout << "You Lose :(" << endl;
-		inProgress = false;
 		cout << "To continue press any key" << endl;
+		inProgress = false;
 		_getch();
+		system("cls");
+	}
+	
+}
+void Game::restart() {
+	inProgress =true;
+	res = true;
+	board.setScore(0);
+	pacman.setLives(3);
+	while (!ghosts.empty()) {
+		ghosts.pop_back();
+	}
+	while (!board.getBoard().empty()) {
+		board.getBoard().pop_back();
 	}
 }
 

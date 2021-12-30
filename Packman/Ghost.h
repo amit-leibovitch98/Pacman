@@ -17,5 +17,5 @@ public:
 	void ghostMoveDecider();
 	bool getRunOverBreadcramp();
 	void setRunOverBreadcramp(bool _run_over_breadcramp);
-
+	void move();
 };

@@ -15,6 +15,26 @@ Ghost& Ghost::operator=(const Ghost& other)
 	return *this;
 }
 
+void Ghost::move() {
+	if (currDiraction == LEFT)
+	{
+		getCurrLocation().moveLeft();
+	}
+	else if (currDiraction == RIGHT)
+	{
+		getCurrLocation().moveRight();
+
+	}
+	else if (currDiraction == UP)
+	{
+		getCurrLocation().moveUp();
+	}
+	else
+	{
+		getCurrLocation().moveDown();
+	}
+}
+
 void Ghost::ghostMoveDecider()
 {
 	//ganarate random number for the position of the ghost:
