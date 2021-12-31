@@ -23,7 +23,7 @@ private:
 	int kindOfGame;
 	const char empty_spot = ' ';
 	int score;
-	int const BREADCRAMPS_NUM = 1064;
+	int BREADCRAMPS_NUM;
 	const char breadcramp_character = '.';
 	const char wall_caracter = '#';
 	const char magic_tunnel_character = '|';
@@ -46,6 +46,7 @@ public:
 	void setBoardHight(ifstream& board_file);
 	int getBoardWidth();
 	int getBoardHight();
+	void setBreadCrampsNum();
 	vector<string>& getBoard() {
 		return board;
 	}
