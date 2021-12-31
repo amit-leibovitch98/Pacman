@@ -88,15 +88,18 @@ void Load::start()
 			//if the pacman meet ghost
 			pacman.initLocations(pacman.getinitLocation());
 			pacman.setHowManySteps(0);
-			for (int i = 0; i < ghosts.size(); i++) {
+			for (int i = 0; i < ghosts.size(); i++)
+			{
 				ghosts[i].initLocations(ghosts[i].getinitLocation());
 				ghosts[i].setHowManySteps(0);
 			}
 			board.printBoard(pacman, ghosts, COLORS);
 			collision = false;
 		}
-		if (!collision) {
-			if (pacman.getHowManySteps() == 0) {
+		if (!collision)
+		{
+			if (pacman.getHowManySteps() == 0) 
+			{
 				pacman.setHowManySteps(decode(pacman, pacmanSteps[0]));
 			}
 			pacman.setLastLocation(pacman.getCurrLocation());
@@ -108,7 +111,8 @@ void Load::start()
 			{
 				for (int i = 0; i < ghosts.size(); i++)
 				{
-					if (ghosts[i].getHowManySteps() == 0) {
+					if (ghosts[i].getHowManySteps() == 0) 
+					{
 						ghosts[i].setHowManySteps(decode(ghosts[i], ghostSteps[0]));
 					}
 					ghosts[i].setLastLocation(ghosts[i].getCurrLocation());
@@ -123,6 +127,7 @@ void Load::start()
 				collision = caseCollisionPacman();
 			}
 
+
 		}
 		ghostPace = !ghostPace;
 		checkGameStatus();
@@ -130,9 +135,12 @@ void Load::start()
 	}
 }
 
-void Load::steps(string file_name) {
+void Load::steps(string file_name) 
+{
 	ifstream steps_file;
 	steps_file.open(file_name);
+
+	steps_file.clear();
 
 	if (!steps_file)
 	{
@@ -140,34 +148,45 @@ void Load::steps(string file_name) {
 		cout << "Error with infile" << endl;
 		exit(-1);
 	}
+
 	char ch='\0';
 	bool pac=false, ghos=false, frui=false;
-	while (ch != EOF) {
-		steps_file.get(ch);
-		if (ch != '\n') {
-			if (ch == 'p') {
+	while (ch != EOF) 
+	{
+		steps_file >> ch;
+		if (ch != '\n')
+		{
+			if (ch == 'p')
+			{
 				pac = true;
-				steps_file.get(ch);
+				steps_file >> ch;
 			}
-			else if (ch == 'g') {
+			else if (ch == 'g')
+			{
 				ghos = true;
-				steps_file.get(ch);
+				steps_file >> ch;
 			}
-			else if (ch == 'f') {
+			else if (ch == 'f')
+			{
 				frui = true;
-				steps_file.get(ch);
+				steps_file >> ch;
 			}
-			if (pac) {
+
+			if (pac)
+			{
 				pacmanSteps.push_back(ch);
 			}
-			else if (ghos) {
+			else if (ghos)
+			{
 				ghostSteps.push_back(ch);
 			}
-			else if (frui) {
+			else if (frui)
+			{
 				fruitSteps.push_back(ch);
 			}
 		}
-		else {
+		else 
+		{
 			pac = ghos = frui = false;
 		}
 	}
@@ -175,41 +194,50 @@ void Load::steps(string file_name) {
 }
 	
 
-int Load::decode(Creature& creature,char ch) {
+int Load::decode(Creature& creature,char ch)
+{
 	int output = 0;
-	if (ch == 'r') {
+	if (ch == 'r') 
+	{
 		creature.setCurrDiraction(RIGHT);
 	}
-	else if (ch == 'l') {
+	else if (ch == 'l') 
+	{
 		creature.setCurrDiraction(LEFT);
 	}
-	else if (ch == 'u') {
+	else if (ch == 'u') 
+	{
 		creature.setCurrDiraction(UP);
 	}
-	else if (ch == 'd') {
+	else if (ch == 'd') 
+	{
 		creature.setCurrDiraction(DOWN);
 	}
-	if (typeid(creature).name() == typeid(pacman).name()) {
+
+	if (typeid(creature).name() == typeid(pacman).name()) 
+	{
 		
 		pacmanSteps.erase(pacmanSteps.begin());
 		 output = pacmanSteps[0];
 		pacmanSteps.erase(pacmanSteps.begin());
 		
 	}
-	else if (typeid(creature).name() == typeid(ghosts[0]).name()) {
+	else if (typeid(creature).name() == typeid(ghosts[0]).name()) 
+	{
 			
 			ghostSteps.erase(ghostSteps.begin());
 			output = ghostSteps[0];
 			ghostSteps.erase(ghostSteps.begin());
 		
-		}
+	}
 		
 
-	else if (typeid(creature).name() == typeid(fruit).name()) {
+	else if (typeid(creature).name() == typeid(fruit).name())
+	{
 		fruitSteps.erase(fruitSteps.begin());
 		 output = fruitSteps[0];
 		fruitSteps.erase(fruitSteps.begin());
-		
+		fruitMode = true;
 	}
 	return output;
 	

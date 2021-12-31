@@ -8,7 +8,7 @@
 
 
 
-int main()
+int main(int argc, char* argv[])
 {
 	cout << "If you want to play with colors enter 1, otherwise enter 0" << endl;
 	bool colors;

@@ -257,11 +257,7 @@ void Game::start()
 			currStep = _getch();
 			_diraction = caster(currStep);
 			pacman.setCurrDiraction(_diraction);
-			//
-			file1 << curr_diraction_step_count << endl;
-			curr_diraction_step_count = 0;
-			file1 << "p " << currStep << " ";
-			//
+
 			if (_diraction != ESC && _diraction != ERR && _diraction != STAY)
 			{
 				pacman.setCurrDiraction(_diraction);
@@ -308,11 +304,6 @@ void Game::start()
 
 		if (!collision)
 		{
-			//
-			curr_diraction_step_count++;
-			//
-			
-
 			//the game continue regullary
 			pacman.setLastLocation(pacman.getCurrLocation());
 			pacman.move();
@@ -433,15 +424,18 @@ void Game::checkGameStatus()
 	}
 	
 }
-void Game::restart() {
+void Game::restart() 
+{
 	inProgress =true;
 	res = true;
 	board.setScore(0);
 	pacman.setLives(3);
-	while (!ghosts.empty()) {
+	while (!ghosts.empty())
+	{
 		ghosts.pop_back();
 	}
-	while (!board.getBoard().empty()) {
+	while (!board.getBoard().empty())
+	{
 		board.getBoard().pop_back();
 	}
 }
