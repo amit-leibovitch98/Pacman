@@ -8,7 +8,7 @@
 
 
 
-int main()
+int main(int argc, char* argv[])
 {
 	cout << "If you want to play with colors enter 1, otherwise enter 0" << endl;
 	bool colors;
@@ -24,10 +24,11 @@ int main()
 
 	if (input != 2)
 	{
-		for (int i = 0; i < 3; i++)
+		for (int i = 2; i < 3; i++)
 		{
 			game.run(screen_files[i], input);
-			if (game.getPacman().getLives() == 0) {
+			if (game.getPacman().getLives() == 0) 
+			{
 				game.restart();
 				input=game.printMenu();
 				i = -1;

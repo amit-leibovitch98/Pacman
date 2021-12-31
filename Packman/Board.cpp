@@ -105,6 +105,20 @@ int Board::getBoardHight()
 	return actual_board_hight;
 }
 
+void Board::setBreadCrampsNum()
+{
+	BREADCRAMPS_NUM = 0;
+	for (int i = 0; i < actual_board_hight - 4; i++)
+	{
+		for (int j = 0; j < actual_board_width; j++)
+		{
+			if (board[i][j] == breadcramp_character)
+				BREADCRAMPS_NUM++;
+		}
+		int p = 0;
+	}
+}
+
 //----------------------------------------------------------------------------------------------------------
 
 void Board::fileToMatrix(ifstream& board_file, char ghost_character, Pacman& pacman, vector<Ghost>& ghosts)
@@ -146,6 +160,8 @@ void Board::fileToMatrix(ifstream& board_file, char ghost_character, Pacman& pac
 		board.push_back(sline);
 
 	}
+
+	setBreadCrampsNum();
 }
 
 void Board::printGhost(Ghost ghost, bool COLORS)
@@ -293,9 +309,11 @@ void Board::movePacman(Pacman& pacman, bool COLORS)
 
 	if (board[pacman.getCurrLocation().getX()][pacman.getCurrLocation().getY()] == breadcramp_character)
 	{
+		BREADCRAMPS_NUM--;
 		score++;
 		board[pacman.getCurrLocation().getX()][pacman.getCurrLocation().getY()] = empty_spot;
-		if (kindOfGame != 3) {
+		if (kindOfGame != 3)
+		{
 			//its not silent mode
 			cout << empty_spot;
 			gotoxy(pacman.getCurrLocation());
@@ -400,21 +418,27 @@ void Board::magicTunnelCase(Pacman& pacman)
 	int newX = pacman.getCurrLocation().getX();
 	int newY = pacman.getCurrLocation().getY();
 
-	if (newY == 0)
+	if (pacman.getCurrDiraction() == RIGHT || pacman.getCurrDiraction() == LEFT)
 	{
-		newY = actual_board_width - 4;
+		if (newY == 0)
+		{
+			newY = actual_board_width - 4;
+		}
+		else
+		{
+			newY = 1;
+		}
 	}
 	else
 	{
-		newY = 1;
-	}
-	if (newX == 0)
-	{
-		newX = actual_board_hight - 3 - 4;
-	}
-	else
-	{
-		newX = 1;
+		if (newX == 0)
+		{
+			newX = actual_board_hight - 4;
+		}
+		else
+		{
+			newX = 1;
+		}
 	}
 	Location newLocation(newX, newY);
 	pacman.setCurrLocation(newLocation);

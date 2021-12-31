@@ -222,11 +222,20 @@ void Game::start()
 	int fruit_pace = 0;
 	bool ghostPace = true;
 	bool collision = false;
+
 	char currStep = _getch();
+	//
+	ofstream file1;
+	file1.open("file1.txt");
+	int curr_diraction_step_count = 0;
+	file1 << "p " << currStep << " ";
+	//
+
 	Location lastLocationGhost;
 	Location lastLocationPacman;
 	diraction _diraction = caster(currStep);
 	pacman.setCurrDiraction(_diraction);
+
 
 	while (inProgress)
 	{
@@ -351,6 +360,9 @@ void Game::start()
 
 		till_fruit_appear++;
 	}
+
+	file1 << countPaces <<endl;
+	file1.close();
 }
 
 
@@ -390,7 +402,7 @@ bool Game::caseCollisionPacman()
 
 void Game::checkGameStatus()
 {
-	if (board.getScore() == board.getBREADCRAMPS_NUM())
+	if (board.getBREADCRAMPS_NUM() == 0)
 	{
 		cout.flush();
 		system("cls");
@@ -412,15 +424,18 @@ void Game::checkGameStatus()
 	}
 	
 }
-void Game::restart() {
+void Game::restart() 
+{
 	inProgress =true;
 	res = true;
 	board.setScore(0);
 	pacman.setLives(3);
-	while (!ghosts.empty()) {
+	while (!ghosts.empty())
+	{
 		ghosts.pop_back();
 	}
-	while (!board.getBoard().empty()) {
+	while (!board.getBoard().empty())
+	{
 		board.getBoard().pop_back();
 	}
 }

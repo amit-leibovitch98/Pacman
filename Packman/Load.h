@@ -16,9 +16,9 @@ class Load
 protected:
 	bool COLORS = true;
 	vector<string> screen_files;
-	vector<char> pacmanSteps;
-	vector<char> ghostSteps;
-	vector<char> fruitSteps;
+	vector<int> pacmanSteps;
+	vector<int> ghostSteps;
+	vector<int> fruitSteps;
 	Pacman pacman;
 	vector<Ghost> ghosts;
 	Board board;
