@@ -1,6 +1,5 @@
 #include <string>
 #include "Game.h"
-#include "Load.h"
 #include "Silent.h"
 
 //Amit Leibovitch : 318659745
@@ -16,44 +15,48 @@ int main(int argc, char* argv[])
 	cin >> colors;
 	//if()
 	Game game(colors);
-	vector<string> screen_files = game.loadFiles();
-	//if this is the load mode- the place that divided by 3 is the board place in the vector.
-	//send approproate input to run in load mode
+	vector<string> screen_files;
 
-	input=game.printMenu();
-
-	if (input != 2)
+	if (argv[1] == "save")
 	{
-		for (int i = 2; i < 3; i++)
+		screen_files = game.loadFiles();
+		input = game.printMenu();
+
+		if (input != 2)
 		{
-			game.run(screen_files[i], input);
-			if (game.getPacman().getLives() == 0) 
+			for (int i = 0; i < 3; i++)
 			{
-				game.restart();
-				input=game.printMenu();
-				i = -1;
-				
-				
+				game.run(screen_files[i], input);
+				if (game.getPacman().getLives() == 0)
+				{
+					game.restart();
+					input = game.printMenu();
+					i = -1;
+
+
+				}
 			}
+		}
+		else
+		{
+			game.choseBoard(screen_files);
+
 		}
 	}
 	else
 	{
-		game.choseBoard(screen_files);
-		
-	}
-	/*else{
-	* Load loadMode(colors,2);
-	* screen_files = loadMode.loadFiles();
-	* for (int i = 0; i < 3; i++)
+		Load loadMode(colors, 2);
+		loadMode.loadFiles();
+
+		for (int i = 0; i < 3; i++)
 		{
 			loadMode.run(i);
-			if (loadMode.getPacman().getLives() == 0) {
+			if (loadMode.getPacman().getLives() == 0) 
+			{
 				loadMode.restart();
 				i = -1;
 			}
 		}
-	*/
-
+	}
 	return 0;
 }

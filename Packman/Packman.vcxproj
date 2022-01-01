@@ -148,6 +148,7 @@
     <ClInclude Include="Location.h" />
     <ClInclude Include="Pacman.h" />
     <ClInclude Include="Silent.h" />
+    <ClInclude Include="StepPair.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -129,7 +129,7 @@ void Game::printLevels(bool COLORS)
 	{
 		cout << "\x1B[95mPlease enter the following level: \033[0m\t\t" << endl;
 		cout << "\x1B[92m(a) BEST\033[0m\t\t" << endl;
-		cout << "\x1B[94m(b) BEST\033[0m\t\t" << endl;
+		cout << "\x1B[94m(b) BEST\03c3[0m\t\t" << endl;
 		cout << "\x1B[91m(c) NOVICE\033[0m\t\t" << endl;
 	}
 	else
@@ -192,7 +192,8 @@ void Game::run(string file_name, int input)
 
 	if (!exit_game)
 	{
-		if (!res) {
+		if (!res) 
+{
 			char level;
 			printLevels(COLORS);
 			cin >> level;
@@ -224,12 +225,6 @@ void Game::start()
 	bool collision = false;
 
 	char currStep = _getch();
-	//
-	ofstream file1;
-	file1.open("file1.txt");
-	int curr_diraction_step_count = 0;
-	file1 << "p " << currStep << " ";
-	//
 
 	Location lastLocationGhost;
 	Location lastLocationPacman;
@@ -324,6 +319,7 @@ void Game::start()
 			{
 				collision = caseCollisionPacman();
 			}
+
 			if (till_fruit_appear == 20)
 			{
 				//the case that fruit appears on the board
@@ -360,9 +356,6 @@ void Game::start()
 
 		till_fruit_appear++;
 	}
-
-	file1 << countPaces <<endl;
-	file1.close();
 }
 
 

@@ -1,11 +1,13 @@
 #include "Silent.h"
 
-void Silent::start() {
+void Silent::start()
+{
 	int till_fruit_appear = 0;
 	int fruit_pace = 0;
 	bool ghostPace = true;
 	bool collision = false;
-	while (inProgress) {
+	while (inProgress) 
+	{
 		if (collision)
 		{
 			//if the pacman meet ghost
@@ -19,7 +21,7 @@ void Silent::start() {
 		}
 		if (!collision) {
 			if (pacman.getHowManySteps() == 0) {
-				pacman.setHowManySteps(decode(pacman, pacmanSteps[0]));
+				pacman.setHowManySteps(decode(pacman, pacmanSteps[0].getDiraction()));
 			}
 			pacman.setLastLocation(pacman.getCurrLocation());
 			pacman.move();
@@ -31,7 +33,7 @@ void Silent::start() {
 				for (int i = 0; i < ghosts.size(); i++)
 				{
 					if (ghosts[i].getHowManySteps() == 0) {
-						ghosts[i].setHowManySteps(decode(ghosts[i], ghostSteps[0]));
+						ghosts[i].setHowManySteps(decode(ghosts[i], ghostSteps[0].getDiraction()));
 					}
 					ghosts[i].setLastLocation(ghosts[i].getCurrLocation());
 					ghosts[i].move();
