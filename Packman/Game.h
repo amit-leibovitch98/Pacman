@@ -17,6 +17,8 @@ class GhostMoveStrategy;
 
 class Game
 {
+
+protected:
 	bool COLORS = true;
 	Pacman pacman;
 	vector<Ghost> ghosts;
