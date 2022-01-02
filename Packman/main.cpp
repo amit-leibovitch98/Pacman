@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 	Game game(colors);
 	vector<string> screen_files;
 
-	if (argv[1] == "save")
+	if (strcmp(argv[1], "save") == 0)
 	{
 		screen_files = game.loadFiles();
 		input = game.printMenu();
@@ -27,13 +27,13 @@ int main(int argc, char* argv[])
 			for (int i = 0; i < 3; i++)
 			{
 				game.run(screen_files[i], input);
+				game.createResultFile(i);
+				 
 				if (game.getPacman().getLives() == 0)
 				{
 					game.restart();
 					input = game.printMenu();
 					i = -1;
-
-
 				}
 			}
 		}

@@ -242,6 +242,7 @@ bool Load::caseCollisionPacman()
 	for (int i = 0; i < ghosts.size() && !ans; i++) {
 		if (pacman.getCurrLocation() == (ghosts[i].getCurrLocation())) {
 			ans = true;
+			deaths[3 - pacman.getLives()] = steps_counter;
 			pacman.liveDedaction();
 		}
 	}
@@ -379,4 +380,59 @@ void Load::restart()
 Pacman Load::getPacman()
 {
 	return pacman;
+}
+
+
+void Load::createResultFile(int screen)
+{
+	ofstream result;
+	result.open(createFileName(screen));
+	int i = 0;
+
+	while (i < 3 && deaths[i] != 0)
+	{
+		result << "Point of time pacman died : " << deaths[i] << endl;
+		i++;
+	}
+
+	result << "Point of time pacman finished the screen: " << steps_counter << endl;
+
+	result.close();
+}
+
+string Load::createFileName(int screen)
+{
+	string file_name;
+
+	if (screen == 0)
+		file_name = "pacman_a.result";
+	else if (screen == 1)
+		file_name = "pacman_b.screen";
+	else
+		file_name = "pacman_c.screen";
+
+	return file_name;
+}
+
+bool Load::compareFiles(string file_name_1, string file_name_2)
+{
+	ifstream file1, file2;
+	char* line1, * line2;
+	line1 = new char[55];
+	line2 = new char[55];
+
+	file1.open(file_name_1);
+	file2.open(file_name_2);
+	bool res = true;
+
+	while (res && !file1.eof())
+	{
+		file1.getline(line1, 55);
+		file2.getline(line2, 55);
+
+		if (strcmp(line1, line2))
+			res = false;
+
+	}
+	return res;
 }
