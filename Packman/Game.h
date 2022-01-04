@@ -29,14 +29,17 @@ protected:
 	bool fruitMode = false;
 	int countPaces = 1;
 	GhostMoveStrategy* strategy;
+	vector<int> deaths = { 0,0,0 };
+	int steps_counter;
 
 public:
-	Game(bool colors) : COLORS(colors), pacman(), inProgress(true), fruit(Location::Location(1, 1)), strategy(nullptr), ghosts({}), board(1) {}
+	Game(bool colors) : COLORS(colors), pacman(), inProgress(true), fruit(Location::Location(1, 1)),
+		strategy(nullptr), ghosts({}), board(1), steps_counter(0) {}
 	~Game() { delete strategy; };
 
 	bool endswith(string file_name);
 	vector<string> loadFiles();
-	void choseBoard(vector<string> screen_files);
+	char choseBoard(vector<string> screen_files);
 	Pacman getPacman();
 	void setPacman(Pacman _pacman);
 	int getGhostCount();
@@ -53,4 +56,7 @@ public:
 	bool caseCollisionPacman();
 	diraction caster(char ch);
 	void checkGameStatus();
+	string createFileName(int screen);
+	void createResultFile(int screen);
+	bool compareFiles(string file_name_1, string file_name_2);
 };

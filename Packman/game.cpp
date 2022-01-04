@@ -129,7 +129,7 @@ void Game::printLevels(bool COLORS)
 	{
 		cout << "\x1B[95mPlease enter the following level: \033[0m\t\t" << endl;
 		cout << "\x1B[92m(a) BEST\033[0m\t\t" << endl;
-		cout << "\x1B[94m(b) BEST\03c3[0m\t\t" << endl;
+		cout << "\x1B[94m(b) BEST\033c3[0m\t\t" << endl;
 		cout << "\x1B[91m(c) NOVICE\033[0m\t\t" << endl;
 	}
 	else
@@ -141,7 +141,7 @@ void Game::printLevels(bool COLORS)
 	}
 
 }
-void Game::choseBoard(vector<string> screen_file) {
+char Game::choseBoard(vector<string> screen_file) {
 	system("cls");
 	char input;
 	cout << "Please chose the following board: " << endl;
@@ -158,7 +158,7 @@ void Game::choseBoard(vector<string> screen_file) {
 	else if (input == 'c') {
 		run(screen_file[2], 2);
 	}
-
+	return input;
 }
 
 void Game::run(string file_name, int input)
@@ -188,12 +188,12 @@ void Game::run(string file_name, int input)
 			printMenu();
 		cin >> input;
 	}
-	
+
 
 	if (!exit_game)
 	{
-		if (!res) 
-{
+		if (!res)
+		{
 			char level;
 			printLevels(COLORS);
 			cin >> level;
@@ -210,7 +210,7 @@ void Game::run(string file_name, int input)
 				strategy = new GhostMoveStrategyC(pacmanLoc, &board);
 			}
 		}
-		
+
 		board.printBoard(pacman, ghosts, COLORS);
 		start();
 	}
@@ -231,9 +231,9 @@ void Game::start()
 	diraction _diraction = caster(currStep);
 	pacman.setCurrDiraction(_diraction);
 
-
 	while (inProgress)
 	{
+		steps_counter++;
 
 		if (collision)
 		{
@@ -366,7 +366,7 @@ Location& Game::randomLocation()
 	int randomX = rand() % (board.getBoardHight() - 5) + 1;
 	int randomY = rand() % (board.getBoardWidth() - 5) + 1;
 
-	while (board.outOfRange(randomX, randomY) || (board.getBoard()[randomX][randomY] == '#' || board.getBoard()[randomX][randomY] == '|')) 
+	while (board.outOfRange(randomX, randomY) || (board.getBoard()[randomX][randomY] == '#' || board.getBoard()[randomX][randomY] == '|'))
 	{
 		randomX = rand() % (board.getBoardHight() - 5) + 1;
 		randomY = rand() % (board.getBoardWidth() - 5) + 1;
@@ -383,9 +383,12 @@ Location& Game::randomLocation()
 bool Game::caseCollisionPacman()
 {
 	bool ans = false;
-	for (int i = 0; i < ghosts.size() && !ans; i++) {
-		if (pacman.getCurrLocation() == (ghosts[i].getCurrLocation())) {
+	for (int i = 0; i < ghosts.size() && !ans; i++)
+	{
+		if (pacman.getCurrLocation() == (ghosts[i].getCurrLocation()))
+		{
 			ans = true;
+			deaths[3 - pacman.getLives()] = steps_counter;
 			pacman.liveDedaction();
 		}
 	}
@@ -415,11 +418,26 @@ void Game::checkGameStatus()
 		_getch();
 		system("cls");
 	}
-	
+
 }
-void Game::restart() 
+
+string Game::createFileName(int screen)
 {
-	inProgress =true;
+	string file_name;
+
+	if (screen == 0)
+		file_name = "pacman_a.result";
+	else if (screen == 1)
+		file_name = "pacman_b.screen";
+	else
+		file_name = "pacman_c.screen";
+
+	return file_name;
+}
+
+void Game::restart()
+{
+	inProgress = true;
 	res = true;
 	board.setScore(0);
 	pacman.setLives(3);
@@ -488,4 +506,45 @@ void Game::caseCollisionGhosts()
 		}
 	}
 
+}
+
+void Game::createResultFile(int screen)
+{
+	ofstream result;
+	result.open(createFileName(screen));
+	int i = 0;
+
+	while (i < 3 && deaths[i] != 0)
+	{
+		result << "Point of time pacman died : " << deaths[i] << endl;
+		i++;
+	}
+
+	result << "Point of time pacman finished the screen: " << steps_counter << endl;
+
+	result.close();
+}
+
+bool Game::compareFiles(string file_name_1, string file_name_2)
+{
+	ifstream file1, file2;
+	char* line1, * line2;
+
+	line1 = new char[55];
+	line2 = new char[55];
+
+	file1.open(file_name_1);
+	file2.open(file_name_2);
+	bool res = true;
+
+	while (res && !file1.eof())
+	{
+		file1.getline(line1, 55);
+		file2.getline(line2, 55);
+
+		if (strcmp(line1, line2))
+			res = false;
+
+	}
+	return res;
 }

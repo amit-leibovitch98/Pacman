@@ -27,6 +27,8 @@ protected:
 	bool res = false;
 	bool fruitMode = false;
 	int countPaces = 0;
+	vector<int> deaths = { 0,0,0 };
+	int steps_counter;
 
 public:
 	Load(bool colors, int kindOfGame) : COLORS(colors), pacman(), inProgress(true), fruit(Location::Location(1, 1)), ghosts({}), board(kindOfGame), screen_files({}) {}
@@ -43,6 +45,9 @@ public:
 	void checkGameStatus();
 	diraction caster(char ch);
 	Location& randomLocation();
+	string createFileName(int screen);
+	void createResultFile(int screen);
+	bool compareFiles(string file_name_1, string file_name_2);
 };
 
 
