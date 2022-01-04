@@ -10,23 +10,23 @@ bool Load::endswith(string file_name, string suffix)
 void Load::loadFiles()
 {
 	string prefix = "/.";
-	
 
-	for (const auto& file : fs::directory_iterator(".")) 
+
+	for (const auto& file : fs::directory_iterator("."))
 	{
-		if (endswith(file.path().string(), "screen")) 
+		if (endswith(file.path().string(), "screen"))
 		{
 			screen_files.push_back(file.path().string());
 		}
-		else if (endswith(file.path().string(), "steps")) 
+		else if (endswith(file.path().string(), "steps"))
 		{
 			screen_files.push_back(file.path().string());
 		}
-		else if (endswith(file.path().string(), "result")) 
+		else if (endswith(file.path().string(), "result"))
 		{
 			screen_files.push_back(file.path().string());
 		}
-			
+
 	}
 
 	if (screen_files.size() < 9)
@@ -76,7 +76,7 @@ void Load::run(int input)
 	{
 		steps(screen_files[4]);
 	}
-	if (input == 2) 
+	if (input == 2)
 	{
 		steps(screen_files[7]);
 	}
@@ -88,7 +88,9 @@ void Load::start()
 	int till_fruit_appear = 0;
 	bool ghostPace = true;
 	bool collision = false;
-	while (inProgress) {
+
+	while (inProgress) 
+	{
 		if (collision)
 		{
 			//if the pacman meet ghost
@@ -104,7 +106,7 @@ void Load::start()
 		}
 		if (!collision)
 		{
-			if (pacman.getHowManySteps() == 0) 
+			if (pacman.getHowManySteps() == 0)
 			{
 				pacman.setHowManySteps(decode(pacman, pacmanSteps[0].getDiraction()));
 			}
@@ -117,7 +119,7 @@ void Load::start()
 			{
 				for (int i = 0; i < ghosts.size(); i++)
 				{
-					if (ghosts[i].getHowManySteps() == 0) 
+					if (ghosts[i].getHowManySteps() == 0)
 					{
 						ghosts[i].setHowManySteps(decode(ghosts[i], ghostSteps[0].getDiraction()));
 					}
@@ -162,13 +164,13 @@ void Load::start()
 		till_fruit_appear--;
 
 	}
-		ghostPace = !ghostPace;
-		checkGameStatus();
-		countPaces++;
+	ghostPace = !ghostPace;
+	checkGameStatus();
+	countPaces++;
 }
 
 
-void Load::steps(string file_name) 
+void Load::steps(string file_name)
 {
 	ifstream steps_file;
 	steps_file.open(file_name);
@@ -183,11 +185,11 @@ void Load::steps(string file_name)
 	}
 
 	bool even = true;
-	char ch= '/0';
+	char ch = '/0';
 	int steps_num;
-	bool pac=false, ghos=false, frui=false;
+	bool pac = false, ghos = false, frui = false;
 
-	while (!steps_file.eof()) 
+	while (!steps_file.eof())
 	{
 		if (!frui)
 		{
@@ -212,6 +214,7 @@ void Load::steps(string file_name)
 				ghos = false;
 				frui = true;
 				ch = '0';
+
 			}
 
 			steps_file >> steps_num;
@@ -235,7 +238,7 @@ void Load::steps(string file_name)
 
 	steps_file.close();
 }
-	
+
 bool Load::caseCollisionPacman()
 {
 	bool ans = false;
@@ -300,13 +303,13 @@ int Load::decode(Creature& creature, diraction dir)
 		}
 
 	}
-	else 
+	else
 	{
 		output = fruitSteps[0];
 		fruitSteps.erase(fruitSteps.begin());
 	}
 	return output;
-	
+
 }
 
 diraction Load::caster(char ch)

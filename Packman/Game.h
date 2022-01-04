@@ -33,13 +33,14 @@ protected:
 	int steps_counter;
 
 public:
-	Game(bool colors) : COLORS(colors), pacman(), inProgress(true), fruit(Location::Location(1, 1)), 
+Game(bool colors) : COLORS(colors), pacman(), inProgress(true), fruit(Location::Location(1, 1)),
 		strategy(nullptr), ghosts({}), board(1), steps_counter(0) {}
 	~Game() { delete strategy; };
 
+
 	bool endswith(string file_name);
 	vector<string> loadFiles();
-	void choseBoard(vector<string> screen_files);
+	char choseBoard(vector<string> screen_files);
 	Pacman getPacman();
 	void setPacman(Pacman _pacman);
 	int getGhostCount();

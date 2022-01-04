@@ -115,7 +115,6 @@ void Board::setBreadCrampsNum()
 			if (board[i][j] == breadcramp_character)
 				BREADCRAMPS_NUM++;
 		}
-		int p = 0;
 	}
 }
 

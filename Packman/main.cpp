@@ -1,11 +1,12 @@
 #include <string>
+#include <algorithm>
 #include "Game.h"
 #include "Silent.h"
 
 //Amit Leibovitch : 318659745
 //Maayan Mashhadi : 318702230
 
-
+bool cmdOptionExists(char** begin, char** end, const std::string& option);
 
 int main(int argc, char* argv[])
 {
@@ -13,50 +14,102 @@ int main(int argc, char* argv[])
 	bool colors;
 	int input;
 	cin >> colors;
-	//if()
-	Game game(colors);
+	Game* game = new Game (colors);
 	vector<string> screen_files;
-
-	if (strcmp(argv[1], "save") == 0)
+	if (argc != 1)
 	{
-		screen_files = game.loadFiles();
-		input = game.printMenu();
-
-		if (input != 2)
+		if (strcmp(argv[1], "-save") == 0)
 		{
+			screen_files = game->loadFiles();
+			input = game->printMenu();
+
+			if (input != 2)
+			{
+				for (int i = 0; i < 3; i++)
+				{
+					game->run(screen_files[i], input);
+					game->createResultFile(i);
+
+					if (game->getPacman().getLives() == 0)
+					{
+						game->restart();
+						input = game->printMenu();
+						i = -1;
+					}
+					delete game;
+					game = new Game(colors);
+				}
+			}
+			else
+			{
+				char whichBoard = game->choseBoard(screen_files);
+				game->createResultFile(whichBoard - 'a');
+
+			}
+		}
+		else if (strcmp(argv[1], "-load") == 0)
+		{
+			Load *loadMode = new Load(colors, 2);
+			loadMode->loadFiles();
+
 			for (int i = 0; i < 3; i++)
 			{
-				game.run(screen_files[i], input);
-				game.createResultFile(i);
-				 
-				if (game.getPacman().getLives() == 0)
+				loadMode->run(i);
+				if (loadMode->getPacman().getLives() == 0)
 				{
-					game.restart();
-					input = game.printMenu();
+					loadMode->restart();
 					i = -1;
 				}
+				delete loadMode;
+				loadMode = new Load(colors, 2);
+			}
+		}
+		else if (strcmp(argv[1], "-load [-silent]") == 0)
+		{
+			Silent *loadMode = new Silent(colors);
+			loadMode->loadFiles();
+
+			for (int i = 0; i < 3; i++)
+			{
+				loadMode->run(i);
+				if (loadMode->getPacman().getLives() == 0)
+				{
+					loadMode->restart();
+					i = -1;
+				}
+				delete loadMode;
+				loadMode = new Silent(colors);
+			}
+		}
+	}
+
+	else 
+	{
+		input = game->printMenu();
+		if (input != 2)
+		{
+			screen_files = game->loadFiles();
+			for (int i = 0; i < 3; i++)
+			{
+				game->run(screen_files[i], input);
+				if (game->getPacman().getLives() == 0) {
+					game->restart();
+					input = game->printMenu();
+					i = -1;
+				}
+				delete game;
+				game = new Game(colors);
 			}
 		}
 		else
 		{
-			game.choseBoard(screen_files);
-
-		}
-	}
-	else
-	{
-		Load loadMode(colors, 2);
-		loadMode.loadFiles();
-
-		for (int i = 0; i < 3; i++)
-		{
-			loadMode.run(i);
-			if (loadMode.getPacman().getLives() == 0) 
-			{
-				loadMode.restart();
-				i = -1;
-			}
+			game->choseBoard(screen_files);
 		}
 	}
 	return 0;
+}
+
+bool cmdOptionExists(char** begin, char** end, const std::string& option)
+{
+	return std::find(begin, end, option) != end;
 }
