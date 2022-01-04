@@ -33,7 +33,7 @@ protected:
 	int steps_counter;
 
 public:
-	Game(bool colors) : COLORS(colors), pacman(), inProgress(true), fruit(Location::Location(1, 1)),
+Game(bool colors) : COLORS(colors), pacman(), inProgress(true), fruit(Location::Location(1, 1)),
 		strategy(nullptr), ghosts({}), board(1), steps_counter(0) {}
 	~Game() { delete strategy; };
 

@@ -170,7 +170,7 @@ void Game::run(string file_name, int input)
 
 	if (!board_file)
 	{
-		cout << "Error with infile" << endl;
+		cout << "ErrorÂ withÂ infile" << endl;
 		exit(-1);
 	}
 
@@ -395,6 +395,7 @@ bool Game::caseCollisionPacman()
 
 	return ans;
 }
+
 
 void Game::checkGameStatus()
 {
