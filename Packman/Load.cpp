@@ -88,7 +88,9 @@ void Load::start()
 	int till_fruit_appear = 0;
 	bool ghostPace = true;
 	bool collision = false;
-	while (inProgress) {
+
+	while (inProgress) 
+	{
 		if (collision)
 		{
 			//if the pacman meet ghost
@@ -212,6 +214,7 @@ void Load::steps(string file_name)
 				ghos = false;
 				frui = true;
 				ch = '0';
+
 			}
 
 			steps_file >> steps_num;

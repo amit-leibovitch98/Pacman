@@ -37,6 +37,7 @@ public:
 		strategy(nullptr), ghosts({}), board(1), steps_counter(0) {}
 	~Game() { delete strategy; };
 
+
 	bool endswith(string file_name);
 	vector<string> loadFiles();
 	char choseBoard(vector<string> screen_files);

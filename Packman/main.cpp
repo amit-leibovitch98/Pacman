@@ -14,90 +14,96 @@ int main(int argc, char* argv[])
 	bool colors;
 	int input;
 	cin >> colors;
-	Game game(colors);
+	Game* game = new Game (colors);
 	vector<string> screen_files;
 	if (argc != 1)
 	{
 		if (strcmp(argv[1], "-save") == 0)
 		{
-			screen_files = game.loadFiles();
-			input = game.printMenu();
+			screen_files = game->loadFiles();
+			input = game->printMenu();
 
 			if (input != 2)
 			{
 				for (int i = 0; i < 3; i++)
 				{
-					game.run(screen_files[i], input);
-					game.createResultFile(i);
+					game->run(screen_files[i], input);
+					game->createResultFile(i);
 
-					if (game.getPacman().getLives() == 0)
+					if (game->getPacman().getLives() == 0)
 					{
-						game.restart();
-						input = game.printMenu();
+						game->restart();
+						input = game->printMenu();
 						i = -1;
 					}
+					delete game;
+					game = new Game(colors);
 				}
 			}
 			else
 			{
-				char whichBoard = game.choseBoard(screen_files);
-				game.createResultFile(whichBoard - 'a');
+				char whichBoard = game->choseBoard(screen_files);
+				game->createResultFile(whichBoard - 'a');
 
 			}
 		}
 		else if (strcmp(argv[1], "-load") == 0)
 		{
-			Load loadMode(colors, 2);
-			loadMode.loadFiles();
+			Load *loadMode = new Load(colors, 2);
+			loadMode->loadFiles();
 
 			for (int i = 0; i < 3; i++)
 			{
-				loadMode.run(i);
-				if (loadMode.getPacman().getLives() == 0)
+				loadMode->run(i);
+				if (loadMode->getPacman().getLives() == 0)
 				{
-					loadMode.restart();
+					loadMode->restart();
 					i = -1;
 				}
+				delete loadMode;
+				loadMode = new Load(colors, 2);
 			}
 		}
 		else if (strcmp(argv[1], "-load [-silent]") == 0)
 		{
-			Silent loadMode(colors);
-			loadMode.loadFiles();
+			Silent *loadMode = new Silent(colors);
+			loadMode->loadFiles();
 
 			for (int i = 0; i < 3; i++)
 			{
-				loadMode.run(i);
-				if (loadMode.getPacman().getLives() == 0)
+				loadMode->run(i);
+				if (loadMode->getPacman().getLives() == 0)
 				{
-					loadMode.restart();
+					loadMode->restart();
 					i = -1;
 				}
+				delete loadMode;
+				loadMode = new Silent(colors);
 			}
 		}
 	}
 
-	else {
-		input = game.printMenu();
+	else 
+	{
+		input = game->printMenu();
 		if (input != 2)
 		{
-			screen_files = game.loadFiles();
+			screen_files = game->loadFiles();
 			for (int i = 0; i < 3; i++)
 			{
-				game.run(screen_files[i], input);
-				if (game.getPacman().getLives() == 0) {
-					game.restart();
-					input = game.printMenu();
+				game->run(screen_files[i], input);
+				if (game->getPacman().getLives() == 0) {
+					game->restart();
+					input = game->printMenu();
 					i = -1;
-
-
 				}
+				delete game;
+				game = new Game(colors);
 			}
 		}
 		else
 		{
-			game.choseBoard(screen_files);
-
+			game->choseBoard(screen_files);
 		}
 	}
 	return 0;
