@@ -59,5 +59,4 @@ Game(bool colors) : COLORS(colors), pacman(), inProgress(true), fruit(Location::
 	void checkGameStatus();
 	string createFileName(int screen);
 	void createResultFile(int screen);
-	bool compareFiles(string file_name_1, string file_name_2);
 };

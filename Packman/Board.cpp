@@ -348,7 +348,13 @@ void Board::movePacman(Pacman& pacman, bool COLORS)
 		}
 		magicTunnelCase(pacman);
 
+		if (board[pacman.getCurrLocation().getX()][pacman.getCurrLocation().getY()] == breadcramp_character)
+		{
+			BREADCRAMPS_NUM--;
+			score++;
+		}
 		gotoxy(pacman.getCurrLocation());
+
 		if (kindOfGame != 3) {
 			printPacman(pacman, COLORS);
 		}
@@ -421,7 +427,7 @@ void Board::magicTunnelCase(Pacman& pacman)
 	{
 		if (newY == 0)
 		{
-			newY = actual_board_width - 4;
+			newY = actual_board_width - 2;
 		}
 		else
 		{

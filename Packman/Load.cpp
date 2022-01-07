@@ -10,13 +10,14 @@ bool Load::endswith(string file_name, string suffix)
 void Load::loadFiles()
 {
 	string prefix = "/.";
-
+	int screen_counter = 0;
 
 	for (const auto& file : fs::directory_iterator("."))
 	{
 		if (endswith(file.path().string(), "screen"))
 		{
 			screen_files.push_back(file.path().string());
+			screen_counter++;
 		}
 		else if (endswith(file.path().string(), "steps"))
 		{
@@ -28,8 +29,8 @@ void Load::loadFiles()
 		}
 
 	}
-
-	if (screen_files.size() < 9)
+	
+	if (screen_counter < 3)
 		//throw exception
 		cout << "There are not enough board files on diractory (less then 3)" << endl;
 	else
@@ -46,15 +47,8 @@ void Load::loadFiles()
 void Load::run(int input)
 {
 	ifstream board_file;
-	if (input == 0) {
-		board_file.open(screen_files[0]);
-	}
-	if (input == 1) {
-		board_file.open(screen_files[3]);
-	}
-	if (input == 2) {
-		board_file.open(screen_files[6]);
-	}
+
+	board_file.open(screen_files[(input + 1) * 3 + 1]); //4,7,10
 
 	if (!board_file)
 	{
@@ -70,17 +64,18 @@ void Load::run(int input)
 	board.printBoard(pacman, ghosts, COLORS);
 	if (input == 0)
 	{
-		steps(screen_files[1]);
+		steps(screen_files[5]);
 	}
 	else if (input == 1)
 	{
-		steps(screen_files[4]);
+		steps(screen_files[8]);
 	}
 	if (input == 2)
 	{
-		steps(screen_files[7]);
+		steps(screen_files[11]);
 	}
 	start();
+	createResultFile(input);
 }
 
 void Load::start()
@@ -88,9 +83,12 @@ void Load::start()
 	int till_fruit_appear = 0;
 	bool ghostPace = true;
 	bool collision = false;
-
-	while (inProgress) 
+	int countPacman = 0;
+	int countGhost = 0;
+	while (inProgress)
 	{
+		steps_counter++;
+
 		if (collision)
 		{
 			//if the pacman meet ghost
@@ -108,67 +106,73 @@ void Load::start()
 		{
 			if (pacman.getHowManySteps() == 0)
 			{
-				pacman.setHowManySteps(decode(pacman, pacmanSteps[0].getDiraction()));
-			}
-			pacman.setLastLocation(pacman.getCurrLocation());
-			pacman.move();
-			board.movePacman(pacman, COLORS);
-			pacman.setHowManySteps(pacman.getHowManySteps() - 1);
-			collision = caseCollisionPacman();
-			if (ghostPace == true)
-			{
-				for (int i = 0; i < ghosts.size(); i++)
+				try
 				{
-					if (ghosts[i].getHowManySteps() == 0)
-					{
-						ghosts[i].setHowManySteps(decode(ghosts[i], ghostSteps[0].getDiraction()));
-					}
-					ghosts[i].setLastLocation(ghosts[i].getCurrLocation());
-					ghosts[i].move();
-					board.moveGhost(ghosts[i], pacman, COLORS);
-					ghosts[i].setHowManySteps(ghosts[i].getHowManySteps() - 1);
+					pacman.setHowManySteps(decode(pacman, pacmanSteps[0].getDiraction()));
+				}
+				catch (const std::out_of_range& pacman_out_of_range)
+				{
+					std::cerr << "Out of Range error: " << pacman_out_of_range.what() << endl;
 				}
 			}
-			if (!collision)
-			{
+				pacman.setLastLocation(pacman.getCurrLocation());
+				pacman.move();
+				board.movePacman(pacman, COLORS);
+				countPacman = pacman.getHowManySteps() - 1;
+				pacman.setHowManySteps(countPacman);
 				collision = caseCollisionPacman();
-			}
-			if (till_fruit_appear == 0)
-			{
-				//the case that fruit appears on the board
-				fruitMode = true;
-				randomLocation();
-				board.moveFruit(fruit, ghosts, pacman.getCurrLocation(), COLORS);
-			}
-			if (fruitMode && ghostPace)
-			{
-				fruit.setLastLocation(fruit.getCurrLocation());
-				fruit.move();
-				board.moveFruit(fruit, ghosts, pacman.getCurrLocation(), COLORS);
-				Sleep(200);
-			}
-			if (till_fruit_appear == -5)
-			{
-				//the case that fruit disapperas
-				fruitMode = false;
-				till_fruit_appear = decode(fruit);
-				board.gotoxy(fruit.getCurrLocation());
-				cout << board.getBoard()[fruit.getCurrLocation().getX()][fruit.getCurrLocation().getY()];
-			}
-			if (fruit.getMeetGhost() || fruit.getMeetPacman())
-				fruitMode = false;
+				if (ghostPace == true)
+				{
+					for (int i = 0; i < ghosts.size(); i++)
+					{
+						if (ghosts[i].getHowManySteps() == 0)
+						{
+							ghosts[i].setHowManySteps(decode(ghosts[i], ghostSteps[0].getDiraction(), i));
+						}
+						ghosts[i].setLastLocation(ghosts[i].getCurrLocation());
+						ghosts[i].move();
+						board.moveGhost(ghosts[i], pacman, COLORS);
+						countGhost = ghosts[i].getHowManySteps() - 1;
+						ghosts[i].setHowManySteps(countGhost);
+					}
+				}
+				if (!collision)
+				{
+					collision = caseCollisionPacman();
+				}
+				if (till_fruit_appear == 0)
+				{
+					//the case that fruit appears on the board
+					fruitMode = true;
+					randomLocation();
+					board.moveFruit(fruit, ghosts, pacman.getCurrLocation(), COLORS);
+				}
+				if (fruitMode && ghostPace)
+				{
+					fruit.setLastLocation(fruit.getCurrLocation());
+					fruit.move();
+					board.moveFruit(fruit, ghosts, pacman.getCurrLocation(), COLORS);
+				}
+				if (till_fruit_appear == -5)
+				{
+					//the case that fruit disapperas
+					fruitMode = false;
+					till_fruit_appear = decode(fruit);
+					board.gotoxy(fruit.getCurrLocation());
+					cout << board.getBoard()[fruit.getCurrLocation().getX()][fruit.getCurrLocation().getY()];
+				}
+				if (fruit.getMeetGhost() || fruit.getMeetPacman())
+					fruitMode = false;
 
-			ghostPace = !ghostPace;
-			checkGameStatus();
+				ghostPace = !ghostPace;
+				checkGameStatus();
+			}
+			till_fruit_appear--;
+
 		}
-		till_fruit_appear--;
-
-	}
-	ghostPace = !ghostPace;
-	checkGameStatus();
-	countPaces++;
+		ghostPace = !ghostPace;
+		countPaces++;
 }
-
 
 void Load::steps(string file_name)
 {
@@ -243,7 +247,8 @@ bool Load::caseCollisionPacman()
 {
 	bool ans = false;
 	for (int i = 0; i < ghosts.size() && !ans; i++) {
-		if (pacman.getCurrLocation() == (ghosts[i].getCurrLocation())) {
+		if (pacman.getCurrLocation() == (ghosts[i].getCurrLocation())) 
+		{
 			ans = true;
 			deaths[3 - pacman.getLives()] = steps_counter;
 			pacman.liveDedaction();
@@ -278,8 +283,9 @@ void Load::checkGameStatus()
 
 }
 
-int Load::decode(Creature& creature, diraction dir)
+int Load::decode(Creature& creature, diraction dir, int i)
 {
+	
 	int output = 0;
 	if (typeid(creature).name() != typeid(fruit).name())
 	{
@@ -288,18 +294,16 @@ int Load::decode(Creature& creature, diraction dir)
 		if (typeid(creature).name() == typeid(pacman).name())
 		{
 
-			pacmanSteps.erase(pacmanSteps.begin());
 			output = pacmanSteps[0].getStepsNum();
 			pacmanSteps.erase(pacmanSteps.begin());
 
 		}
 		else if (typeid(creature).name() == typeid(ghosts[0]).name())
 		{
-
-			ghostSteps.erase(ghostSteps.begin());
 			output = ghostSteps[0].getStepsNum();
-			ghostSteps.erase(ghostSteps.begin());
 
+			if (i == 1)
+				ghostSteps.erase(ghostSteps.begin());
 		}
 
 	}
@@ -380,16 +384,11 @@ void Load::restart()
 	}
 }
 
-Pacman Load::getPacman()
-{
-	return pacman;
-}
-
-
 void Load::createResultFile(int screen)
 {
 	ofstream result;
-	result.open(createFileName(screen));
+	result_file_name = createFileName(screen);
+	result.open(result_file_name);
 	int i = 0;
 
 	while (i < 3 && deaths[i] != 0)
@@ -410,9 +409,9 @@ string Load::createFileName(int screen)
 	if (screen == 0)
 		file_name = "pacman_a.result";
 	else if (screen == 1)
-		file_name = "pacman_b.screen";
+		file_name = "pacman_b.result";
 	else
-		file_name = "pacman_c.screen";
+		file_name = "pacman_c.result";
 
 	return file_name;
 }
