@@ -53,3 +53,41 @@ void Silent::start()
 		countPaces++;
 	}
 }
+
+bool Silent::compareFiles(string file_name_1, string file_name_2)
+{
+	ifstream file1, file2;
+	char* line1, * line2;
+
+	line1 = new char[55];
+	line2 = new char[55];
+
+	file1.open(file_name_1);
+	file2.open(file_name_2);
+	bool res = true;
+
+	while (res && !file1.eof())
+	{
+		file1.getline(line1, 55);
+		file2.getline(line2, 55);
+
+		if (strcmp(line1, line2))
+			res = false;
+
+	}
+	return res;
+}
+
+void Silent::bigRun(int input)
+{
+	run(input);
+
+	if (compareFiles(result_file_name, screen_files[(input + 1) * 3 + 1])) //      ,      4,7,10
+	{
+		cout << "Test succeeded! :)" << endl;
+	}
+	else
+	{
+		cout << "Test Faild! :(" << endl;
+	}
+}

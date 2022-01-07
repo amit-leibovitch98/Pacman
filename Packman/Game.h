@@ -33,7 +33,7 @@ protected:
 	int steps_counter;
 
 public:
-	Game(bool colors) : COLORS(colors), pacman(), inProgress(true), fruit(Location::Location(1, 1)),
+Game(bool colors) : COLORS(colors), pacman(), inProgress(true), fruit(Location::Location(1, 1)),
 		strategy(nullptr), ghosts({}), board(1), steps_counter(0) {}
 	~Game() { delete strategy; };
 
@@ -59,5 +59,4 @@ public:
 	void checkGameStatus();
 	string createFileName(int screen);
 	void createResultFile(int screen);
-	bool compareFiles(string file_name_1, string file_name_2);
 };

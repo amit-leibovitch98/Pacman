@@ -129,7 +129,7 @@ void Game::printLevels(bool COLORS)
 	{
 		cout << "\x1B[95mPlease enter the following level: \033[0m\t\t" << endl;
 		cout << "\x1B[92m(a) BEST\033[0m\t\t" << endl;
-		cout << "\x1B[94m(b) BEST\033c3[0m\t\t" << endl;
+		cout << "\x1B[94m(b) BEST\033[0m\t\t" << endl;
 		cout << "\x1B[91m(c) NOVICE\033[0m\t\t" << endl;
 	}
 	else
@@ -148,14 +148,19 @@ char Game::choseBoard(vector<string> screen_file) {
 	cout << "(a) pacman_a" << endl;
 	cout << "(b) pacman_b" << endl;
 	cout << "(c) pacman_c" << endl;
+
 	cin >> input;
-	if (input == 'a') {
+
+	if (input == 'a') 
+	{
 		run(screen_file[0], 2);
 	}
-	else if (input == 'b') {
+	else if (input == 'b') 
+	{
 		run(screen_file[1], 2);
 	}
-	else if (input == 'c') {
+	else if (input == 'c') 
+	{
 		run(screen_file[2], 2);
 	}
 	return input;
@@ -170,7 +175,7 @@ void Game::run(string file_name, int input)
 
 	if (!board_file)
 	{
-		cout << "Error with infile" << endl;
+		cout << "ErrorÂ withÂ infile" << endl;
 		exit(-1);
 	}
 
@@ -213,6 +218,7 @@ void Game::run(string file_name, int input)
 
 		board.printBoard(pacman, ghosts, COLORS);
 		start();
+		createResultFile(input);
 	}
 
 }
@@ -396,6 +402,7 @@ bool Game::caseCollisionPacman()
 	return ans;
 }
 
+
 void Game::checkGameStatus()
 {
 	if (board.getBREADCRAMPS_NUM() == 0)
@@ -525,26 +532,3 @@ void Game::createResultFile(int screen)
 	result.close();
 }
 
-bool Game::compareFiles(string file_name_1, string file_name_2)
-{
-	ifstream file1, file2;
-	char* line1, * line2;
-
-	line1 = new char[55];
-	line2 = new char[55];
-
-	file1.open(file_name_1);
-	file2.open(file_name_2);
-	bool res = true;
-
-	while (res && !file1.eof())
-	{
-		file1.getline(line1, 55);
-		file2.getline(line2, 55);
-
-		if (strcmp(line1, line2))
-			res = false;
-
-	}
-	return res;
-}
