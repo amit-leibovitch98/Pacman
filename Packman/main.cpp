@@ -3,14 +3,14 @@
 #include "Game.h"
 #include "Silent.h"
 
+
 //Amit Leibovitch : 318659745
 //Maayan Mashhadi : 318702230
 
 int main(int argc, char* argv[])
 {
-	bool colors;
-	int input;
-	
+	bool colors, exit = false;
+	int input, pacman_lives;
 	vector<string> screen_files;
 
 	//------------------------------------------------with argumants--------------------------------------------------------------
@@ -27,47 +27,57 @@ int main(int argc, char* argv[])
 
 			if (input != 2)
 			{
-				for (int i = 0; i < 3; i++)
+				for (int i = 0; i < 3 && !exit; i++)
 				{
 					screen_files = game->loadFiles();
 
-					game->run(screen_files[i], input);
+					exit = game->run(screen_files[i], input, i);
 
-					if (game->getPacman().getLives() == 0)
+					if (!exit)
 					{
-						game->restart();
-						input = game->printMenu();
-						i = -1;
+						pacman_lives = game->getPacman().getLives();
+
+						if (pacman_lives == 0)
+						{
+							game->restart();
+							input = game->printMenu();
+							i = -1;
+						}
+						delete game;
+						game = new Game(colors, pacman_lives);
 					}
-					delete game;
-					game = new Game(colors);
 				}
 			}
 			else
 			{
-				char whichBoard = game->choseBoard(screen_files);
+				char whichBoard = game->chooseBoard(screen_files);
 			}
 		}
 		else if (strcmp(argv[1], "-load") == 0)
 		{
-		if (strcmp(argv[2], "[-silent]") == 0)
+		if (argc > 2)
 		{
-			Silent* silent = new Silent();
-
-			for (int i = 0; i < 3; i++)
+			if (strcmp(argv[2], "[-silent]") == 0)
 			{
-				silent->bigRun(i);
-				silent->loadFiles();
+				Silent* silent = new Silent();
 
-				if (silent->getPacman().getLives() == 0)
+				for (int i = 0; i < 3; i++)
 				{
-					silent->restart();
-					i = -1;
+					silent->loadFiles();
+					silent->sRun(i);
+
+					pacman_lives = silent->getPacman().getLives();
+
+					if (pacman_lives == 0)
+					{
+						silent->restart();
+						i = -1;
+					}
+
+
+					delete silent;
+					silent = new Silent(pacman_lives);
 				}
-
-
-				delete silent;
-				silent = new Silent();
 			}
 		}
 		else
@@ -82,13 +92,15 @@ int main(int argc, char* argv[])
 				loadMode->loadFiles();
 				loadMode->run(i);
 
-				if (loadMode->getPacman().getLives() == 0)
+				pacman_lives = loadMode->getPacman().getLives();
+
+				if (pacman_lives == 0)
 				{
 					loadMode->restart();
 					i = -1;
 				}
 				delete loadMode;
-				loadMode = new Load(colors, 2);
+				loadMode = new Load(colors, 2, pacman_lives);
 			}
 		}
 		}
@@ -104,24 +116,29 @@ int main(int argc, char* argv[])
 		input = game->printMenu();
 		if (input != 2)
 		{
-			for (int i = 0; i < 3; i++)
+			for (int i = 0; i < 3 && !exit; i++)
 			{
 				screen_files = game->loadFiles();
-				game->run(screen_files[i], input);
+				exit = game->run(screen_files[i], input, i);
 
-				if (game->getPacman().getLives() == 0)
+				if (!exit)
 				{
-					game->restart();
-					input = game->printMenu();
-					i = -1;
+					pacman_lives = game->getPacman().getLives();
+
+					if (pacman_lives == 0)
+					{
+						game->restart();
+						input = game->printMenu();
+						i = -1;
+					}
+					delete game;
+					game = new Game(colors, pacman_lives);
 				}
-				delete game;
-				game = new Game(colors);
 			}
 		}
 		else
 		{
-			game->choseBoard(screen_files);
+			game->chooseBoard(screen_files);
 		}
 	}
 	return 0;

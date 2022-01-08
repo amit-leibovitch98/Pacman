@@ -48,33 +48,25 @@ void Load::run(int input)
 {
 	ifstream board_file;
 
-	board_file.open(screen_files[(input + 1) * 3 + 1]); //4,7,10
-
-	if (!board_file)
+	try
 	{
-		//throw exception
-		cout << "Error with infile" << endl;
-		exit(-1);
+		board_file.open(screen_files[((input + 1) * 3 + 1)]); //4,7,10
+	}
+	catch (const std::ios_base::failure& fail)
+	{
+		std::cout << fail.what() << endl;
 	}
 
 	board.fileToMatrix(board_file, '$', pacman, ghosts);
 
 	board_file.close();
-
+	 
 	board.printBoard(pacman, ghosts, COLORS);
-	if (input == 0)
-	{
-		steps(screen_files[5]);
-	}
-	else if (input == 1)
-	{
-		steps(screen_files[8]);
-	}
-	if (input == 2)
-	{
-		steps(screen_files[11]);
-	}
+
+	steps(screen_files[(input + 1) * 3 + 2]);
+
 	start();
+
 	createResultFile(input);
 }
 
@@ -85,6 +77,7 @@ void Load::start()
 	bool collision = false;
 	int countPacman = 0;
 	int countGhost = 0;
+
 	while (inProgress)
 	{
 		steps_counter++;
@@ -250,7 +243,7 @@ bool Load::caseCollisionPacman()
 		if (pacman.getCurrLocation() == (ghosts[i].getCurrLocation())) 
 		{
 			ans = true;
-			deaths[3 - pacman.getLives()] = steps_counter;
+			deaths.push_back(steps_counter);
 			pacman.liveDedaction();
 		}
 	}
@@ -391,7 +384,7 @@ void Load::createResultFile(int screen)
 	result.open(result_file_name);
 	int i = 0;
 
-	while (i < 3 && deaths[i] != 0)
+	while (i < deaths.size())
 	{
 		result << "Point of time pacman died : " << deaths[i] << endl;
 		i++;

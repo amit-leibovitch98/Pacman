@@ -1,6 +1,42 @@
 #include "Silent.h"
 
-void Silent::start()
+void Silent::sRun(int input)
+{
+	ifstream board_file;
+
+	try
+	{
+		board_file.open(screen_files[((input + 1) * 3 + 1)]); //4,7,10
+	}
+	catch (const std::ios_base::failure& fail)
+	{
+		std::cout << fail.what() << endl;
+	}
+
+	board.fileToMatrix(board_file, '$', pacman, ghosts);
+
+	board_file.close();
+
+	steps(screen_files[(input + 1) * 3 + 2]);
+
+	start();
+
+	createResultFile(input);
+
+	if (compareFiles(result_file_name, screen_files[input]))
+	{
+		cout << "Test succeeded! :)" << endl;
+	}
+	else
+	{
+		cout << "Test Faild! :(" << endl;
+	}
+	cout << "To continue press any key" << endl;
+	_getch();
+
+}
+
+void Silent::sStart()
 {
 	int till_fruit_appear = 0;
 	int fruit_pace = 0;
@@ -52,6 +88,7 @@ void Silent::start()
 		checkGameStatus();
 		countPaces++;
 	}
+	
 }
 
 bool Silent::compareFiles(string file_name_1, string file_name_2)
@@ -78,16 +115,4 @@ bool Silent::compareFiles(string file_name_1, string file_name_2)
 	return res;
 }
 
-void Silent::bigRun(int input)
-{
-	run(input);
 
-	if (compareFiles(result_file_name, screen_files[(input + 1) * 3 + 1])) //      ,      4,7,10
-	{
-		cout << "Test succeeded! :)" << endl;
-	}
-	else
-	{
-		cout << "Test Faild! :(" << endl;
-	}
-}

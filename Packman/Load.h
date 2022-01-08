@@ -27,20 +27,25 @@ protected:
 	bool res = false;
 	bool fruitMode = false;
 	int countPaces = 0;
-	vector<int> deaths = { 0,0,0 };
+	vector<int> deaths;
 	int steps_counter;
 	string result_file_name;
 
 public:
 	Load(int kindOfGame) :  pacman(), inProgress(true), fruit(Location::Location(1, 1)), ghosts({}), board(kindOfGame), screen_files({}) {}
-	Load(bool colors, int kindOfGame) : COLORS(colors), pacman(), inProgress(true), fruit(Location::Location(1, 1)), ghosts({}), board(kindOfGame), screen_files({}) {}
+	Load(int kindOfGame, int pacman_lives) : pacman(pacman_lives), inProgress(true), fruit(Location::Location(1, 1)), ghosts({}), board(kindOfGame), screen_files({}) {}
+	Load(bool colors, int kindOfGame) : 
+		COLORS(colors), pacman(), inProgress(true), fruit(Location::Location(1, 1)), ghosts({}), board(kindOfGame), screen_files({}) {}
+	Load(bool colors, int kindOfGame, int pacman_lives) :
+		COLORS(colors), pacman(pacman_lives), inProgress(true), fruit(Location::Location(1, 1)), ghosts({}), board(kindOfGame), screen_files({}) {}
+
 	bool endswith(string file_name, string suffix);
 	vector<string>& getScreenFiles() { return screen_files; }
 	void restart();
 	Pacman getPacman() { return pacman; }
 	void loadFiles();
 	void run(int input);
-	virtual void start();
+	void start();
 	void steps(string file_name);
 	int decode(Creature& creature, diraction dir = STAY, int i = 1);
 	bool caseCollisionPacman();

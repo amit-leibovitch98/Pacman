@@ -141,7 +141,8 @@ void Game::printLevels(bool COLORS)
 	}
 
 }
-char Game::choseBoard(vector<string> screen_file) {
+char Game::chooseBoard(vector<string> screen_file) 
+{
 	system("cls");
 	char input;
 	cout << "Please chose the following board: " << endl;
@@ -151,76 +152,78 @@ char Game::choseBoard(vector<string> screen_file) {
 
 	cin >> input;
 
+
 	if (input == 'a') 
 	{
-		run(screen_file[0], 2);
+		run(screen_file[0], 2, 0);
 	}
 	else if (input == 'b') 
 	{
-		run(screen_file[1], 2);
+		run(screen_file[1], 2, 1);
 	}
 	else if (input == 'c') 
 	{
-		run(screen_file[2], 2);
+		run(screen_file[2], 2, 2);
 	}
 	return input;
 }
 
-void Game::run(string file_name, int input)
+bool Game::run(string file_name, int input, int screen)
 {
-	bool exit_game = false;
 
 	ifstream board_file;
-	board_file.open(file_name);
-
-	if (!board_file)
+	try
 	{
-		cout << "Error with infile" << endl;
-		exit(-1);
+		board_file.open(file_name); //4,7,10
+	}
+	catch (const std::ios_base::failure& fail)
+	{
+		std::cout << fail.what() << endl;
 	}
 
 	board.fileToMatrix(board_file, '$', pacman, ghosts);
 
 	board_file.close();
 
-	while (input != 1 && input != 2 && !exit_game)
+	while (input != 1 && input != 2)
 	{
-		if (input == 8)
-			printInstruction();
-		else if (input == 9)
-			exit_game = true;
-		else if (input == 7)
-			printMenu();
-		cin >> input;
-	}
-
-
-	if (!exit_game)
-	{
-		if (!res)
+		if (input != 9)
 		{
-			char level;
-			printLevels(COLORS);
-			cin >> level;
-			//CREATE HERE THE STRATEGY OF MOVING GHOSTS and pass it as parameter to game
-			Location pacmanLoc = pacman.getCurrLocation();
-			if (level == 'a') {
-
-				strategy = new GhostMoveStrategyA(pacmanLoc, &board);
-			}
-			else if (level == 'b') {
-				strategy = new GhostMoveStrategyB(pacmanLoc, &board);
-			}
-			else {
-				strategy = new GhostMoveStrategyC(pacmanLoc, &board);
-			}
+			if (input == 8)
+				printInstruction();
+			if (input == 7)
+				printMenu();
+			cin >> input;
 		}
+		else
+			return true;
+	}
+		
+	if (!res)
+	{
+		char level;
+		printLevels(COLORS);
+		cin >> level;
+		//CREATE HERE THE STRATEGY OF MOVING GHOSTS and pass it as parameter to game
+		Location pacmanLoc = pacman.getCurrLocation();
+		if (level == 'a') 
+		{
 
-		board.printBoard(pacman, ghosts, COLORS);
-		start();
-		createResultFile(input);
+			strategy = new GhostMoveStrategyA(pacmanLoc, &board);
+		}
+		else if (level == 'b') 
+		{
+			strategy = new GhostMoveStrategyB(pacmanLoc, &board);
+		}
+		else {
+			strategy = new GhostMoveStrategyC(pacmanLoc, &board);
+		}
 	}
 
+	board.printBoard(pacman, ghosts, COLORS);
+	start();
+	createResultFile(screen);
+	
 }
 
 void Game::start()
@@ -394,7 +397,7 @@ bool Game::caseCollisionPacman()
 		if (pacman.getCurrLocation() == (ghosts[i].getCurrLocation()))
 		{
 			ans = true;
-			deaths[3 - pacman.getLives()] = steps_counter;
+			deaths.push_back(steps_counter);
 			pacman.liveDedaction();
 		}
 	}
@@ -435,9 +438,9 @@ string Game::createFileName(int screen)
 	if (screen == 0)
 		file_name = "pacman_a.result";
 	else if (screen == 1)
-		file_name = "pacman_b.screen";
+		file_name = "pacman_b.result";
 	else
-		file_name = "pacman_c.screen";
+		file_name = "pacman_c.result";
 
 	return file_name;
 }
@@ -521,7 +524,7 @@ void Game::createResultFile(int screen)
 	result.open(createFileName(screen));
 	int i = 0;
 
-	while (i < 3 && deaths[i] != 0)
+	while (i < deaths.size())
 	{
 		result << "Point of time pacman died : " << deaths[i] << endl;
 		i++;
